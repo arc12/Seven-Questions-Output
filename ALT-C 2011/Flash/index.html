@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>ALT-C 2011</title>
+	<meta http-equiv="Content-Type" content="text/html" />
+	<!-- See http://www.roytanck.com/2008/05/19/how-to-repurpose-my-tag-cloud-flash-movie/ -->
+	<script type="text/javascript" src="../../swfobject.js"></script>
+	<script type="text/javascript" src="../../wordcumulus.js"></script>
+	<style type="text/css">
+		body { background-color: #eee; padding: 20px; } 
+	</style>
+</head>
+
+<body>
+<H1>Seven Questions Tag Clouds: ALT-C 2011</H1>
+Choose a question: <select onclick="changeCloud(this.options[this.selectedIndex].value);">
+<option value="tagcloud_1.xml">Questions for the Oracle about 2025</option>
+<option value="tagcloud_2.xml">A Favourable Outcome by 2025</option>
+<option value="tagcloud_3.xml">An Unfavourable Outcome</option>
+<option value="tagcloud_4.xml">How Will Culture and Institutions Need to Change</option>
+<option value="tagcloud_5.xml">Lessons from the Past</option>
+<option value="tagcloud_6.xml">Decisions to be Made and Actions Taken</option>
+<option value="tagcloud_7.xml">If You Had a  Magic Wand    </option>
+<option value="tagcloud_8.xml" selected>All Questions</option>
+</select>
+<table><tr><td>
+<div id="cloud">Requires Flash and Javascript.</div>
+</td>
+<td><iframe name="ll" frameborder=1 width="200" height="600" align="right"></iframe>
+</td></tr></table>
+
+	<script type="text/javascript">
+		var so = new SWFObject("../../tagcloud.swf", "tagcloud", "800", "600", "7", "#ffffff");
+		// uncomment next line to enable transparency
+		so.addParam("wmode", "transparent");
+		so.addVariable("hicolor", "0x000000");
+		so.addVariable("tspeed", "60");
+		so.addVariable("distr", "true");
+		so.addVariable("xmlpath", "tagcloud_8.xml");
+		so.write("cloud");
+		function changeCloud(xmlFile){
+			so.addVariable("xmlpath", xmlFile);
+			so.write("cloud");
+		}
+	</script>
+
+
+<hr/>
+Thanks to <a href="http://www.roytanck.com/2008/05/19/how-to-repurpose-my-tag-cloud-flash-movie/">Roy Tanck</a> for the Flash cloud.
+
+</body>
+
+</html>

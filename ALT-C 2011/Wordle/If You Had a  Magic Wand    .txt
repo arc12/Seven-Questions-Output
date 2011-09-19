@@ -1,0 +1,12 @@
+access:4
+choice:2
+create:2
+device:2
+education:3
+entitlement:2
+equality:2
+free:6
+investment:2
+kids:2
+remove:3
+staff:2

@@ -1,0 +1,1204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Seven Questions Term Clouds and Sentiment Analysis: ALT-C 2011</title>
+  <meta name="AUTHOR" content="Adam Cooper" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" type="text/css" href="http://visapi-gadgets.googlecode.com/svn/trunk/termcloud/tc.css"/>
+  <script type="text/javascript" src="http://visapi-gadgets.googlecode.com/svn/trunk/termcloud/tc.js"></script>
+  <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    
+  <style type="text/css">
+	body { background-color: #efefef; padding: 10px;}
+	div.nice { width: 270px; float: left; padding: 10px;}
+	div.clear { clear: both;} 
+	div.reduced {font-size: 12px; font-family: arial; color: black; clear: both;}
+  </style>
+
+<!-- these are for the term cloud words -->
+ <style type="text/css">
+.term-cloud {font-family: arial; font-size: 10px;}
+.term-cloud-1 {font-size: 12px; color: #607ec5; }
+.term-cloud-2 {font-size: 14px; color: #607ec5; }
+.term-cloud-3 {font-size: 18px; color: #133b97; }
+.term-cloud-4 {font-size: 22px; color: #133b97; }
+.term-cloud-5 {font-size: 26px; color: #002a8b; }
+.term-cloud-6 {font-size: 32px; color: #002a8b; }
+.term-cloud-7 {font-size: 36px; color: #081122; }
+.term-cloud-8 {font-size: 40px; color: #081122; }
+.term-cloud-9 {font-size: 44px; color: #000000; }
+.term-cloud-error {font-family: arial; font-size: 10px; color: red; }
+.term-cloud-link {text-decoration: none; }
+.term-cloud-link:hover {text-decoration: underline;}
+</style>
+  
+  <script language="javascript" type="text/javascript">
+  	var pseudoQ;
+  	var qTitles;
+  	var nResponses;
+  	var responses;
+  	var tcArray;
+  	var radarArray;
+  	var termUses;
+  	var currentQ;
+  	var tcOptions = null;
+  	var radarOptions;
+  	var gadgets;
+
+	//options for imageChart to make it plot a radar with the appropriate category labels
+	function initOptions(){
+		radarOptions = {
+			chxl: '0:|Positive|Strong|Active|Role|Negative|Weak|Passive|Object',
+			chxp: '',
+			chxr: '',
+			chxs: '0,000000',
+			chf: 'bg,s,EFEFEF',
+			chxtc: '',
+			chxt: 'x',
+			chs: '250x250',
+			cht: 'r',
+			chco: 'FF0000',
+			chds: '0,1',
+			chls: '2,4,0',
+			chm: 'B,FF000080,0,0,0'
+		};
+	}
+
+	//data from R will be injected using Brew, the bulk coming over as JSON
+	// NB: R indexes start from 1, JS ones start at 0; all should be rebased to JS at the earliest point
+  	function initData(){
+  	pseudoQ = 7;
+
+	//the question headings, including the "all questions" pseudo-qestion
+	qTitles = ["Questions for the Oracle about 2025","A Favourable Outcome by 2025","An Unfavourable Outcome","How Will Culture and Institutions Need to Change","Lessons from the Past","Decisions to be Made and Actions Taken","If You Had a  Magic Wand    ","All Questions"];
+	/*the responses as a 2-dim array. 1st index is response index, 2nd is question #
+		NB: no column for "all questions" */
+	nResponses = 14;
+	responses = [
+	
+		["How will we reconcile institutionally-owned and learner-owned (or teacher-owned) technologies?\nWill we have \"authentic assessment\"?\nWill we still be giving lectures in universities?","Usage and activity data being used to understand the nature of learning.\nSoftware that helps learners manage the development of their metacognitive skills","Large scale use of \"intelligent tutoring\" software.\nPersonalisation by automation\nStill using VLEs mostly to store lecture notes and videos","Society and learners expect education to be like it always has been - it is conservative - and this constrains innovation.\nBuild a culture where risk-taking is more acceptable.\nReward structures and timetabling in universities do not favour innovation with learning technology","VLEs became a store for handouts and notes rather than a hub of constructivist learning.\nIt isn't just training that is needed to foster adoption of a new technology for teaching and learning.\nIn 1995, no-one saw \"Web 2.0\".","Make time and space for innovative practitioners and technologists.\nSupport entrepreneurs in bringing the good stuff to \"market\" - get enough scale and investment for sustainability.\nInvest in appropriation of ubiquitous web technologies rather than the development of specialist \"learning technologies\"","Create a set of interoperability standards that meet 80% of all needs and get them implemented so we can concentrate on the more educationally-interesting problems."]		,
+	
+		["Yes, main uncertainty, will we overcome the pernicious digital divide, as society is becoming more unequal\nThe Oracle should be asked. \nA mobiles still handheld or wearable\nHow joined up has data become?\nHow far did open go","Innovation, tech completely integrated in smart environment with data overlaid\nDoing increase collaboration, wider working groups, more networked way of working, assessments based on collaborative Work","Commodification of information, firewalls, cost driven\ntoo much observation CCTV, data used negatively, big number crunched, to enhance the now click here form of learning\ntechnology used as a basis of contractual learning, everything fee driven\n","More Open\nAgile Curriculum Design and Institutions\nRethink assessment\nPeople need to sound time think about educational outcomes\n\n\n","Significant, tech isn't a silver bullet\nToo much much shiny stuff, \nCBL was thought to change the world as it was infinitely scalable\nPace of change and dealing with staff was harder than thought","Priority next round of Quantitative Easing should follow Uruguayan model \nA technological Autumn\nSector Bodies training, LSIS courses, \nJISC training, cross institutional advances cross pollinated\nALT good start, a good online community\n","Equality of Opportunity, LLL free at the point of use\na Technological Autumn"]		,
+	
+		["Devices - how will that affect us? What will be the balance of face-to-face versus online communication and learning? Will the corporates take over? Who will have control?","Technology should be used to its full advantage so that face-to-face time is Used wisely.","If technology is being used to control. If education is too linked into commercial aims","Higher education has to put as much effort into improving teaching and learning as they do research.","Learning design proved difficult to develop and share with others","Focus on digital literacy - too big a gap, this needs to be closed","More socialist!!! Even out the social inequalities."]		,
+	
+		["Will one child per laptop be universal?\nWhat will our learning spaces and libraries look like?\nHow big will informal education be?\nWill it be simple to acquire accreditation for our informal learning?","Equality of access to connectivity for young children\nThat we have implemented on a large scale the things we know that work - that we have done them and seen them through - rather than having been occupied with small action research projects. Grasping the nettle and doing things bigger for the long term.\n\n","That we don't grasp the nettle around equality of access to digital connectivity so that the skillsets only belong to the elite.\n\nThat we have not acted to enable digital equality.","They need to find ways to accredit informal learning and experience\n\nLecturers are more likely to need to have a portfolio job .... lecturers \/ structures need to support more flexible and virtual working\n\nUnions need to understand ways to support this sort of transition\n","Open education - we've been trying to develop it but with limited success\n\nCommunities of practice have evolved on a small scale - but we need to spread and built on and scale up that work","Focus on the argument that education is a human right and learning technology and technologists are in a position to deliver learning content \/ opportunities much more widely\n\nThe digital divide \/  educational access can be breached via learning technology","Equality of Internet access across the board"]		,
+	
+		["Will there be specific learning technologies or will it be just be knowledge and information technologies.  Will there be provides specifically for learning technologies or will there be just general providers.  Will we have to pay for knowledge technologies or will they be free.  Will be have lectures in  traditional sense or will environmental concerns restrict our movements.","Increased openness of resources and access to experts - a blurring between education and other areas of life.  More widespread and inclusive use of technologies.  Blurring of social and 'educational' activities a blurring of formal education and learning. ","Teachers don't also embrace the technology - if they don't they won't understand their students.  If teachers don't become with students using technology.","Openness within the institutions - in OUNL we are very industrial with faculty separate from students so little communication.  Less silo and hierarchy would help openness.  Need to break down the boundaries between research and education.","Learning objects promise didn't come to fruition.  General issues around re-using - it is very difficult.","Are the sector bodies capable of making such difficult decisions or should there be more self organising?","Ever individual to have broadband access for free , anytime and anywhere."]		,
+	
+		["Will universities still be relevant in 2025 given the rise of education through other sources, e.g. online?\n\nWill Learning Technologists still be needed given the rise of social media and ubiquity of e-learning tools?\n\n","More tools that are user friendly to teachers on the ground allowing them to apply their teaching without barriers such as complicated authoring software.\n\nBetter mobile infrastructure for medical students working out in practice. Better acceptance amongst clinical teachers for the use of mobile technologies. \n\nBetter integration between NHS and university academic and teaching resources.\n\nBetter sharing in education community.","People need to think more about the ethical uses of tools such as facebook and twitter, issues such as digital identity, how twitter reflects your professional persona. Confusion between professional and personal.\n\nDisappointed if educational systems were migrated to large corporate systems such as Google and Blackboard. IPR issues. Danger of large corporations having a lot of control over educational material owned by institutions. Concerned about too much being moved into the cloud without thinking about implications of that.\n\n","In larger organisations there needs to be a better understanding between central IT services and the faculties. Better consultation with the faculties on decisions for new technologies to avoid duplicate systems.\n\nBetter management structure and fewer processes and committees to get decisions made more quickly.","Second Life - over-hyped.\nLearning communities are too eager to jump onto latest fad without digesting how things can be used for teaching.\n\nePortfolios","Serious review amongst academic staff and students about what's important to them, what they currently do in face to face setting that could be enhanced through the use of learning technology. More consultation with students on what would help them. A lot of decisions are made at management level without consulting the key stakeholders.","Take on more teaching staff to free up time for other staff."]		,
+	
+		["Is there more equality in access? What is the bottom line in what people have.","Being used as a means to educate rather than educating to use it. Focus on the learning not the tech. Using the Internet for the amazing resource that it is and creating good researchers.","Would not like to see a separation between learning technologists students and teachers.  Don't fall out with our stakeholders. ","Lecturers not led by teaching and learning moving from putting knowledge in the centre to co creating knowledge with students. closer gap between senior management, lecturers and support staff. \n\n","Not done it long enough to comment.","Better forum for academics to share good practice across institutions and internationally as well, more embedded in work than a conference.","Across education as a whole in the uk we are bound by tradition and cannot think beyond it. We have always done things this way putting kids through by age nit as relevant as it used it to be, remove schools, start from blank canvas and see what we come up with."]		,
+	
+		["Enabling it to support participative learning.\nIf they could train politicians and vice chancellors to understand learning and technology.\n","User owned data.\nEnabling collaborative learning\n","Learning technology used to drive The national curriculum and high stakes assessment\nInternet safety turns into surveillance\nGovernment and institutions continue to own learner data\n","Institutions need to become adaptive working across collaborative networks\nNeed to move form Hierarchical thinking to networked thinking\n\n","Pedagogy, good learning technology design reveals the underlying pedagogy \nMassification it's not about reducing the unit cost of delivery\n\n\n","We need a shift to open scholarship using technology to support participative and connected pedagogies ubiquitously\nLSIS should continue with personal development and training\nJISC should co create research into the effectiveness of various learning technologies \n","Create a participative democracy"]		,
+	
+		["Will universities still be around in the current state that we know them?\n\nHow will the role of the learning technologist change?  Will it still exist?\n\nWhat are the key issues facing education and learning technology in 2025?","Seemless access to where the education is being provided.\nStudents don't have to know what tool they are using. More integration between.\n\nMore user friendly tools.\n\n\n\n","If people go off and do their own thing and use their own systems.  That would increase the support burden. \n\nIf people stopped using technology that would also be concern.","Better communication between central services and the faculties.\n\nMore money into central support rather than taking money away.\n","We need to look at what's out there more and stop reinventing the wheel.  Duplication of effort through different funding streams.\n\nSome of the tools that are developed need to be promoted more.  Hoe do you maintain these tools after they have been developed\n\nNeed for ongoing support for tools.","Should be a review of the best support models for the use of learning technology.  This will vary amongst institutions.\n\nWe need to make teaching in HE more of a profession. Could be something the HEA promotes.  Or bring in teaching fellows to do Year 1 & 2 teaching.","More money for education and remove the barriers of tuition fees."]		,
+	
+		["For me it's more the impossibility of predicting the future. It's seductive to think what might be. It's nearly impossible to predict Google, Facebook. These things come about unpredictably.\nAt the moment, there is more free-to-use software, but the business model is uncertain. I wonder whether all that is sustainable? ","The main thing I hope to see is driving down the cost of the hardware. So that everyone can afford the technology needed.\nI am not so happy with the division between formal and informal learning. I would like to see a blurring of learning. Learning is not just something you do at school.","There is a risk of people harvesting data, and using it for purposes for which it was not intended. Unethical use of the data that is everywhere, fx. supermarkets gathering data about customer behaviour, fx. buying sweets.","Different cultures between primary schools and higher education. Parts of the culture of primary school should move up the system. You would want teachers to care about their learners. Care in a more individual, personal sense, not economic care.\nThere are contractual limitations, too many differences between different 'classes' of employees. Issue of inequality between teaching and admin staff, for example.","When people offer something up as 'THE answer', the promise hardly ever became reality. You need a dose of criticalilty, and a sense of context and situatedness.","I think JISC should spread their money wider and thinner. Lightweight distribution of funding would decrease the risk of failure. It is very hard to pick winners to invest in. There are very many creative people out there who need incentives.","To give free hardware to everybody, so they can access everything."]		,
+	
+		["Was there a political back-lash against technology...was it accepted?\nIs the VLE\/LMS an important component?\nHave the majority of educations overcome their lack of engagement?\nWhat is the dominant form of technology being used?","Much more open-framework and interoperability established within \/ between systems - less silo mentality\n\nFull participation by educators and students in the learning process - multi-directional","Commercial silos of large multi-national groups\/vendors dominating the agenda, creating competing closed silos, eg Pearson\/Blackboard.","They need to become much better informed on detail around practical usage and competency in the implementation of the technology.\nThere needs to be culture of enabling off continuous innovations with more willingness for balanced risk.","Interactive media as a device for more interactive learning has proved to be much expensive and time consuming than was expected. \n\nPersonalisation of learning has proved more expensive and difficult using technology than traditional methods.\n\nInstitutional regulation has proved to be a constraint to rapid take-up of technology.","Major focus on teacher training in the use of technology.\n\nThink they should invest in awareness programmer but less biased open source solutions, as this can breed false economics.","Massive investment in the use of technology including free entitlement to the device if choice, plus investment in the UK supply chain to build a new industry which is world beating for the 21 Century."]		,
+	
+		["how have we transformed our assessment systems in school?\nin what ways have universities worked out ways to make HE affordable and accessible?\nhas our education system provided our children with relevant future proofed skills?\nhave we prepared our teachers to nurture young peoples digital literacy?","to see affordable PAYG HE model\nLearning tech to make HE as accessible as poss to everyone\nclassrooms without walls - normal in primary schools, connections with other schools, kids, readily available to all kids in primary schools\n\ntechnology as a way for children to research their passions, and get accreditation at very early","that we hold onto old models too long and miss the boat. that we dont' think about newer models of HE enough\n\nObsession with league tables standard tests etc prevent kids from developing digital literacy","the role of the teacher\/ lecturer, their training - more facilitative\/ virtual","distance learning and open education make education more accessible than it has been - need to build on previous successes, dissemination of the model\n\n","sector bodies to support institutions to remodel themselves around different business models that are about less campus based education.\n\nteachers to be rewarded for different teaching models - sector bodies can advise\/ support on this - accreditation of informal education\/ experiences","remove obsession with tests and international league tables, stifles creativity and passion in kids\n\nusing universal digital connectivity to allow children to research their passions\n\n"]		,
+	
+		["[transcribed from session]\nHow are learners interacting with technology for learning?\nIs it still primarily mono-directional?\nWhat is the dominant form of technology used - what devices and interfaces are being used?\nWhat is the educators role in 2025 in the use of technology?","More collaborative use of technology i.e. 2-way and multi-directional","No progress from today, especially in the way institutions and facilitators are facilitating the use of technology.","Culture and institutions need to become more trusting - therefore less restricting","Training of teachers needs to be at the front of the process","Training of teachers in benefits and use of technology for learning. Help them feel confident and that they can trust students to learn from their mistakes. Training is the main area of investment for teachers.","Equalise access to technology for everyone. e.g. free entitlement to a device of your choice."]		,
+	
+		["[transcribed from paper record made at workshop]\nHow has technology changed the delivery model, especially in relation to personalisation of learning? What has the technology enabled?\nWhat is the most common mode of interaction? What next beyond mouse and current gestural interfaces?\n","Further democratisation of education, more universal\/affordable access to resources and educational opportunities.\nBuilding and sharing.\nPeople have more of a stake in software development, e.g. able to design apps themselves","Technology favouring the elite (money, prior education, developed world...)","Embedding digital literacies is vital for educational professionals. Too many see this as an optional part of an HEI. This is both a cultural and a business development change.","One of the curses has hovered around the use of \"pilot\", the idea that a \"pilot\" will go away.\nUnwillingness to engage in dialogue about transformative change.","Evidence-based approach to change and making more from the strength of community based research.\nInstitutional managers made to fear being left behind => the action is to challenge management with evidence.","Connect learning technologies and education from nursery to HE through a funded model where government listens to the experts and expert-practitioners.\nSchool, FE and HE sectors move out of silos."]		
+	
+		];
+	/* a lookup-object to locate which respopnses to which questions contain a given term
+		object key is the term, object value is a ragged array
+		(1st index is question #, each row is a list of the indeces of responses where that question contains the term in the object key) */
+		termUses = {
+
+"academic":
+	[[],[6],[],[],[],[6],[]],
+"access":
+	[[7],[4,5,9,14],[4],[],[],[4],[4,5,10,13]],
+"accessible":
+	[[12],[12],[],[],[12],[],[]],
+"accreditation":
+	[[4],[12],[],[],[],[12],[]],
+"action":
+	[[],[4],[],[],[],[14],[]],
+"affordable":
+	[[12],[12],[],[],[],[],[]],
+"amongst":
+	[[],[6],[],[],[],[6,9],[]],
+"assessment":
+	[[1,12],[],[8],[2],[],[],[]],
+"autumn":
+	[[],[],[],[],[],[2],[2]],
+"barriers":
+	[[],[6],[],[],[],[],[9]],
+"based":
+	[[],[2],[],[],[],[12,14],[]],
+"beyond":
+	[[14],[],[],[],[],[],[7]],
+"blurring":
+	[[],[5,10],[],[],[],[],[]],
+"bodies":
+	[[],[],[],[],[],[2,5,12],[]],
+"build":
+	[[],[],[],[1],[12],[],[11]],
+"business":
+	[[10],[],[],[14],[],[12],[]],
+"care":
+	[[],[],[],[10],[],[],[]],
+"central":
+	[[],[],[],[6,9],[],[],[]],
+"change":
+	[[9],[],[],[14],[2,14],[14],[]],
+"children":
+	[[12],[4,12],[],[],[],[],[12]],
+"choice":
+	[[],[],[],[],[],[],[11,13]],
+"closed":
+	[[],[],[11],[],[],[3],[]],
+"collaborative":
+	[[],[2,8,13],[],[8],[],[],[]],
+"commercial":
+	[[],[],[3,11],[],[],[],[]],
+"communication":
+	[[3],[],[],[5,9],[],[],[]],
+"communities":
+	[[],[],[],[],[4,6],[],[]],
+"community":
+	[[],[6],[],[],[],[2,14],[]],
+"connectivity":
+	[[],[4],[4],[],[],[],[12]],
+"consultation":
+	[[],[],[],[6],[],[6],[]],
+"continue":
+	[[],[],[8],[],[],[8],[]],
+"contractual":
+	[[],[],[2],[10],[],[],[]],
+"control":
+	[[3],[],[3,6],[],[],[],[]],
+"cost":
+	[[],[10],[2],[],[8],[],[]],
+"create":
+	[[],[],[],[],[],[8],[1,8]],
+"creating":
+	[[],[7],[11],[7],[],[],[]],
+"cross":
+	[[],[],[],[],[],[2],[]],
+"culture":
+	[[],[],[],[1,10,11,13],[],[],[]],
+"current":
+	[[9,14],[],[],[],[],[],[]],
+"curriculum":
+	[[],[],[8],[2],[],[],[]],
+"data":
+	[[2],[1,2,8],[2,8,10],[],[],[],[]],
+"decisions":
+	[[],[],[],[6],[],[5,6],[]],
+"delivery":
+	[[14],[],[],[],[8],[],[]],
+"design":
+	[[],[14],[],[2],[3,8],[],[]],
+"develop":
+	[[],[],[],[],[3,4],[],[]],
+"developed":
+	[[],[],[14],[],[9],[],[]],
+"development":
+	[[],[1,14],[],[14],[],[1,8],[]],
+"device":
+	[[],[],[],[],[11],[],[11,13]],
+"devices":
+	[[3,13],[],[],[],[],[],[]],
+"difficult":
+	[[],[],[],[],[3,5,11],[5],[]],
+"digital":
+	[[2,12],[],[4,6,12],[14],[],[3,4],[12]],
+"divide":
+	[[2],[],[],[],[],[4],[]],
+"dominant":
+	[[11,13],[],[],[],[],[],[]],
+"dont":
+	[[],[9],[4,5,7,12],[],[],[],[]],
+"driven":
+	[[],[],[2],[],[],[],[]],
+"education":
+	[[4,6,9,12],[5,6,9,14],[3,14],[1,3,5,10],[4,12],[4,12],[7,9,14]],
+"educational":
+	[[],[5,14],[6],[2,14],[],[4],[]],
+"educators":
+	[[13],[11],[],[],[],[],[]],
+"effort":
+	[[],[],[],[3],[9],[],[]],
+"elite":
+	[[],[],[4,14],[],[],[],[]],
+"enabling":
+	[[8],[8],[],[11],[],[],[]],
+"entitlement":
+	[[],[],[],[],[],[],[11,13]],
+"equality":
+	[[7],[4],[4],[],[],[],[2,4]],
+"especially":
+	[[14],[],[13],[],[],[],[]],
+"expensive":
+	[[],[],[],[],[11],[],[]],
+"experts":
+	[[],[5],[],[],[],[],[14]],
+"facebook":
+	[[10],[],[6],[],[],[],[]],
+"facetoface":
+	[[3],[3],[],[],[],[],[]],
+"faculties":
+	[[],[],[],[6,9],[],[],[]],
+"focus":
+	[[],[7],[],[],[],[3,4,11],[]],
+"form":
+	[[11,13],[],[2],[8],[],[],[]],
+"formal":
+	[[],[5,10],[],[],[],[],[]],
+"free":
+	[[5],[],[],[],[],[],[2,5,6,10,11,13]],
+"friendly":
+	[[],[6,9],[],[],[],[],[]],
+"funding":
+	[[],[],[],[],[9],[10],[]],
+"future":
+	[[10,12],[],[],[],[],[],[]],
+"gap":
+	[[],[],[],[7],[],[3],[]],
+"google":
+	[[10],[],[6],[],[],[],[]],
+"government":
+	[[],[],[8],[],[],[],[14]],
+"hardware":
+	[[],[10],[],[],[],[],[10]],
+"help":
+	[[],[],[],[5],[],[6,13],[]],
+"implemented":
+	[[],[4],[],[],[],[],[1]],
+"increase":
+	[[],[2],[9],[],[],[],[]],
+"individual":
+	[[],[],[],[10],[],[],[5]],
+"informal":
+	[[4],[10],[],[4],[],[12],[]],
+"information":
+	[[5],[],[2],[],[],[],[]],
+"innovation":
+	[[],[2],[],[1],[],[],[]],
+"institutional":
+	[[],[],[],[],[11],[2,14],[]],
+"institutions":
+	[[],[],[6,8,13],[2,5,8,13],[],[7,9,12],[]],
+"integration":
+	[[],[6,9],[],[],[],[],[]],
+"interactive":
+	[[],[],[],[],[11],[],[]],
+"interfaces":
+	[[13,14],[],[],[],[],[],[]],
+"internet":
+	[[],[7],[8],[],[],[],[4]],
+"interoperability":
+	[[],[11],[],[],[],[],[1]],
+"invest":
+	[[],[],[],[],[],[1,10,11],[]],
+"investment":
+	[[],[],[],[],[],[1,13],[11]],
+"isnt":
+	[[],[],[],[],[1,2],[],[]],
+"issues":
+	[[9],[],[6],[],[5],[],[]],
+"jisc":
+	[[],[],[],[],[],[2,8,10],[]],
+"key":
+	[[9],[],[],[],[],[6],[]],
+"kids":
+	[[],[12],[12],[],[],[],[7,12]],
+"knowledge":
+	[[5],[],[],[7],[],[],[]],
+"league":
+	[[],[],[12],[],[],[],[12]],
+"learners":
+	[[13],[1],[],[1,10],[],[],[]],
+"learning":
+	[[3,4,5,6,8,9,13,14],[1,5,7,8,10,11,12],[2,7,8],[1,3,4,7],[1,3,5,6,8,11,12],[1,4,6,8,9,13],[14]],
+"lecturers":
+	[[],[],[],[4,7],[],[],[]],
+"lectures":
+	[[1,5],[],[],[],[],[],[]],
+"life":
+	[[],[5],[],[],[6],[],[]],
+"literacy":
+	[[12],[],[12],[],[],[3],[]],
+"look":
+	[[4],[],[],[],[9],[],[]],
+"lot":
+	[[],[],[6],[],[],[6],[]],
+"lsis":
+	[[],[],[],[],[],[2,8],[]],
+"main":
+	[[2],[10],[],[],[],[13],[]],
+"management":
+	[[],[],[],[6,7],[],[6,14],[]],
+"media":
+	[[6],[],[],[],[11],[],[]],
+"mobile":
+	[[],[6],[],[],[],[],[]],
+"model":
+	[[10,14],[12],[],[],[12],[2],[14]],
+"models":
+	[[],[],[12],[],[],[9,12],[]],
+"money":
+	[[],[],[14],[9],[],[10],[9]],
+"move":
+	[[],[],[],[8,10],[],[],[14]],
+"multidirectional":
+	[[],[11,13],[],[],[],[],[]],
+"nettle":
+	[[],[4],[4],[],[],[],[]],
+"networked":
+	[[],[2],[],[8],[],[],[]],
+"notes":
+	[[],[],[1],[],[1],[],[]],
+"obsession":
+	[[],[],[12],[],[],[],[12]],
+"online":
+	[[3,6],[],[],[],[],[2],[]],
+"onto":
+	[[],[],[12],[],[6],[],[]],
+"openness":
+	[[],[5],[],[5],[],[],[]],
+"opportunities":
+	[[],[14],[],[],[],[4],[]],
+"overcome":
+	[[2,11],[],[],[],[],[],[]],
+"owned":
+	[[],[8],[6],[],[],[],[]],
+"participative":
+	[[8],[],[],[],[],[8],[8]],
+"passions":
+	[[],[12],[],[],[],[],[12]],
+"pedagogy":
+	[[],[],[],[],[8],[],[]],
+"people":
+	[[7],[14],[6,9,10],[2],[10],[10],[]],
+"personal":
+	[[],[],[6],[10],[],[8],[]],
+"personalisation":
+	[[14],[],[1],[],[11],[],[]],
+"pilot":
+	[[],[],[],[],[14],[],[]],
+"practice":
+	[[],[6],[],[],[4],[7],[]],
+"primary":
+	[[],[12],[],[10],[],[],[]],
+"process":
+	[[],[11],[],[],[13],[],[]],
+"professional":
+	[[],[],[6],[],[],[],[]],
+"promise":
+	[[],[],[],[],[5,10],[],[]],
+"proved":
+	[[],[],[],[],[3,11],[],[]],
+"provided":
+	[[12],[9],[],[],[],[],[]],
+"putting":
+	[[],[],[],[7],[],[],[7]],
+"relevant":
+	[[6,12],[],[],[],[],[],[7]],
+"remove":
+	[[],[],[],[],[],[],[7,9,12]],
+"research":
+	[[],[4,12],[],[3,5],[],[8,14],[12]],
+"resources":
+	[[],[5,6,14],[],[],[],[],[]],
+"review":
+	[[],[],[],[],[],[6,9],[]],
+"rise":
+	[[6],[],[],[],[],[],[]],
+"risk":
+	[[],[],[10],[11],[],[10],[]],
+"role":
+	[[9,13],[],[],[12],[],[],[]],
+"scale":
+	[[],[4],[1],[],[4],[1],[]],
+"school":
+	[[12],[10],[],[10],[],[],[14]],
+"schools":
+	[[],[12],[],[10],[],[],[7]],
+"sector":
+	[[],[],[],[],[],[2,5,12],[]],
+"sense":
+	[[5],[],[],[10],[10],[],[]],
+"services":
+	[[],[],[],[6,9],[],[],[]],
+"share":
+	[[],[],[],[],[3],[7],[]],
+"sharing":
+	[[],[6,14],[],[],[],[],[]],
+"silo":
+	[[],[11],[],[5],[],[],[]],
+"silos":
+	[[],[],[11],[],[],[],[14]],
+"skills":
+	[[12],[1],[],[],[],[],[]],
+"social":
+	[[6],[5],[],[],[],[],[3]],
+"society":
+	[[2],[],[],[1],[],[],[]],
+"software":
+	[[10],[1,6,14],[1],[],[],[],[]],
+"spread":
+	[[],[],[],[],[4],[10],[]],
+"staff":
+	[[],[],[],[7,10],[2],[6],[6]],
+"stakeholders":
+	[[],[],[7],[],[],[6],[]],
+"start":
+	[[],[],[],[],[],[2],[7]],
+"store":
+	[[],[],[1],[],[1],[],[]],
+"structures":
+	[[],[],[],[1,4],[],[],[]],
+"students":
+	[[],[6,9,11],[5,7],[5,7],[],[6,13],[]],
+"stuff":
+	[[],[],[],[],[2],[1],[]],
+"support":
+	[[8],[],[9],[4,7,9],[9],[1,8,9,12],[]],
+"system":
+	[[12],[],[],[10],[],[],[]],
+"systems":
+	[[12],[11],[6,9],[6],[],[],[]],
+"tables":
+	[[],[],[12],[],[],[],[12]],
+"teacher":
+	[[],[],[],[12],[],[11],[]],
+"teachers":
+	[[12],[6],[5,7],[10],[13],[12,13],[]],
+"teaching":
+	[[],[6],[],[3,7,10],[1,6],[9,12],[6]],
+"tech":
+	[[],[2,7,12],[],[],[2],[],[]],
+"technological":
+	[[],[],[],[],[],[2],[2]],
+"technologies":
+	[[1,5],[5,6],[],[6],[],[1,8],[14]],
+"technologists":
+	[[6],[],[7],[],[],[1,4],[]],
+"technology":
+	[[8,9,11,13,14],[3,10,12,13],[2,3,5,8,9,13,14],[1,11],[1,8,11],[4,6,8,9,11,13],[11,13]],
+"tests":
+	[[],[],[12],[],[],[],[12]],
+"thinking":
+	[[],[],[6],[8],[],[],[]],
+"time":
+	[[],[3],[],[2],[11],[1],[6]],
+"tools":
+	[[6],[6,9],[6],[],[9],[],[]],
+"traditional":
+	[[5],[],[],[],[11],[],[]],
+"training":
+	[[],[],[],[12],[1,13],[2,8,11,13],[]],
+"transcribed":
+	[[13,14],[],[],[],[],[],[]],
+"twitter":
+	[[],[],[6],[],[],[],[]],
+"understand":
+	[[8],[1],[5],[4],[],[],[]],
+"universal":
+	[[4],[],[],[],[],[],[12]],
+"universities":
+	[[1,6,9,12],[],[],[1],[],[],[]],
+"usage":
+	[[],[1],[],[11],[],[],[]],
+"user":
+	[[],[6,8,9],[],[],[],[],[]],
+"using":
+	[[],[7,9],[1,5,9,10],[],[11],[8],[12]],
+"virtual":
+	[[],[],[],[4,12],[],[],[]],
+"vles":
+	[[],[],[1],[],[1],[],[]],
+"web":
+	[[],[],[],[],[1],[1],[]],
+"whats":
+	[[],[],[],[],[9],[6],[]],
+"wider":
+	[[],[2],[],[],[],[10],[]],
+"world":
+	[[],[],[14],[],[2],[],[11]]		};
+		
+	/* the data for the termclouds is an array of DataTable objects,
+		array index is the question number (including the pseudo-question for "all questions"
+		the DataTable is for direct use with the termcloud */
+	tcArray = new Array(8);
+	
+	var dt = new google.visualization.DataTable();
+	dt.addColumn('string', 'Label');
+        dt.addColumn('number', 'Value');
+        dt.addRows([
+                	['assessment',2],
+        	['current',2],
+        	['devices',2],
+        	['digital',2],
+        	['dominant',2],
+        	['education',4],
+        	['form',2],
+        	['future',2],
+        	['informal',2],
+        	['interfaces',2],
+        	['knowledge',2],
+        	['learning',12],
+        	['lectures',2],
+        	['model',2],
+        	['online',2],
+        	['overcome',2],
+        	['relevant',2],
+        	['rise',2],
+        	['role',2],
+        	['technologies',5],
+        	['technology',8],
+        	['transcribed',2],
+        	['universities',4]
+        	]);
+		tcArray[0] = dt;
+		dt = null;
+
+	var dt = new google.visualization.DataTable();
+	dt.addColumn('string', 'Label');
+        dt.addColumn('number', 'Value');
+        dt.addRows([
+                	['access',4],
+        	['blurring',4],
+        	['children',2],
+        	['collaborative',3],
+        	['data',3],
+        	['development',2],
+        	['education',5],
+        	['educational',2],
+        	['formal',2],
+        	['friendly',2],
+        	['integration',2],
+        	['kids',2],
+        	['learning',9],
+        	['mobile',2],
+        	['multidirectional',2],
+        	['primary',2],
+        	['research',2],
+        	['resources',3],
+        	['schools',3],
+        	['sharing',2],
+        	['software',3],
+        	['students',3],
+        	['teachers',2],
+        	['teaching',2],
+        	['tech',3],
+        	['technologies',2],
+        	['technology',4],
+        	['tools',2],
+        	['user',3],
+        	['using',2]
+        	]);
+		tcArray[1] = dt;
+		dt = null;
+
+	var dt = new google.visualization.DataTable();
+	dt.addColumn('string', 'Label');
+        dt.addColumn('number', 'Value');
+        dt.addRows([
+                	['commercial',2],
+        	['control',2],
+        	['data',5],
+        	['digital',4],
+        	['dont',6],
+        	['driven',2],
+        	['education',2],
+        	['educational',2],
+        	['elite',2],
+        	['equality',2],
+        	['institutions',3],
+        	['issues',2],
+        	['learning',4],
+        	['models',2],
+        	['people',4],
+        	['professional',2],
+        	['silos',2],
+        	['students',3],
+        	['systems',3],
+        	['teachers',3],
+        	['technology',8],
+        	['twitter',2],
+        	['using',4]
+        	]);
+		tcArray[2] = dt;
+		dt = null;
+
+	var dt = new google.visualization.DataTable();
+	dt.addColumn('string', 'Label');
+        dt.addColumn('number', 'Value');
+        dt.addRows([
+                	['care',3],
+        	['central',3],
+        	['communication',2],
+        	['culture',4],
+        	['decisions',2],
+        	['education',4],
+        	['educational',2],
+        	['faculties',3],
+        	['innovation',2],
+        	['institutions',4],
+        	['knowledge',2],
+        	['learners',2],
+        	['learning',4],
+        	['lecturers',4],
+        	['management',2],
+        	['money',2],
+        	['move',2],
+        	['openness',2],
+        	['primary',2],
+        	['research',2],
+        	['services',2],
+        	['staff',2],
+        	['structures',2],
+        	['students',2],
+        	['support',4],
+        	['teaching',3],
+        	['technology',2],
+        	['thinking',2],
+        	['virtual',2]
+        	]);
+		tcArray[3] = dt;
+		dt = null;
+
+	var dt = new google.visualization.DataTable();
+	dt.addColumn('string', 'Label');
+        dt.addColumn('number', 'Value');
+        dt.addRows([
+                	['change',3],
+        	['communities',2],
+        	['design',2],
+        	['develop',2],
+        	['developed',2],
+        	['difficult',3],
+        	['education',3],
+        	['expensive',2],
+        	['interactive',2],
+        	['isnt',2],
+        	['learning',9],
+        	['pedagogy',2],
+        	['pilot',2],
+        	['promise',2],
+        	['proved',4],
+        	['scale',2],
+        	['teaching',2],
+        	['technology',4],
+        	['tools',3],
+        	['training',2]
+        	]);
+		tcArray[4] = dt;
+		dt = null;
+
+	var dt = new google.visualization.DataTable();
+	dt.addColumn('string', 'Label');
+        dt.addColumn('number', 'Value');
+        dt.addRows([
+                	['amongst',2],
+        	['based',2],
+        	['bodies',4],
+        	['community',2],
+        	['cross',2],
+        	['decisions',2],
+        	['development',2],
+        	['digital',2],
+        	['education',3],
+        	['focus',3],
+        	['help',2],
+        	['institutional',2],
+        	['institutions',3],
+        	['invest',3],
+        	['investment',2],
+        	['jisc',3],
+        	['learning',8],
+        	['lsis',2],
+        	['management',2],
+        	['models',3],
+        	['research',2],
+        	['review',2],
+        	['sector',4],
+        	['students',3],
+        	['support',5],
+        	['teachers',3],
+        	['teaching',4],
+        	['technologies',3],
+        	['technologists',2],
+        	['technology',7],
+        	['training',6]
+        	]);
+		tcArray[5] = dt;
+		dt = null;
+
+	var dt = new google.visualization.DataTable();
+	dt.addColumn('string', 'Label');
+        dt.addColumn('number', 'Value');
+        dt.addRows([
+                	['access',4],
+        	['choice',2],
+        	['create',2],
+        	['device',2],
+        	['education',3],
+        	['entitlement',2],
+        	['equality',2],
+        	['free',6],
+        	['investment',2],
+        	['kids',2],
+        	['remove',3],
+        	['staff',2],
+        	['technology',2]
+        	]);
+		tcArray[6] = dt;
+		dt = null;
+
+	var dt = new google.visualization.DataTable();
+	dt.addColumn('string', 'Label');
+        dt.addColumn('number', 'Value');
+        dt.addRows([
+                	['assessment',4],
+        	['lectures',2],
+        	['technologies',12],
+        	['universities',5],
+        	['data',9],
+        	['digital',10],
+        	['divide',2],
+        	['main',3],
+        	['overcome',2],
+        	['society',2],
+        	['communication',3],
+        	['control',3],
+        	['devices',2],
+        	['facetoface',2],
+        	['learning',47],
+        	['online',3],
+        	['accreditation',3],
+        	['education',24],
+        	['informal',5],
+        	['look',2],
+        	['universal',2],
+        	['free',7],
+        	['information',2],
+        	['knowledge',4],
+        	['sense',3],
+        	['traditional',2],
+        	['media',2],
+        	['relevant',3],
+        	['rise',2],
+        	['social',3],
+        	['technologists',4],
+        	['tools',7],
+        	['access',11],
+        	['equality',6],
+        	['people',9],
+        	['enabling',3],
+        	['participative',3],
+        	['support',12],
+        	['technology',35],
+        	['understand',4],
+        	['change',6],
+        	['current',2],
+        	['issues',4],
+        	['key',2],
+        	['role',3],
+        	['business',3],
+        	['facebook',2],
+        	['future',2],
+        	['google',2],
+        	['model',6],
+        	['software',5],
+        	['dominant',2],
+        	['form',4],
+        	['accessible',3],
+        	['affordable',2],
+        	['children',4],
+        	['literacy',3],
+        	['provided',2],
+        	['school',4],
+        	['skills',2],
+        	['system',2],
+        	['systems',6],
+        	['teachers',11],
+        	['educators',2],
+        	['interfaces',2],
+        	['learners',4],
+        	['transcribed',2],
+        	['beyond',2],
+        	['delivery',2],
+        	['especially',2],
+        	['personalisation',3],
+        	['development',5],
+        	['usage',2],
+        	['based',3],
+        	['collaborative',4],
+        	['increase',2],
+        	['innovation',3],
+        	['networked',2],
+        	['tech',4],
+        	['wider',2],
+        	['time',5],
+        	['action',2],
+        	['connectivity',3],
+        	['implemented',2],
+        	['nettle',2],
+        	['research',7],
+        	['scale',5],
+        	['blurring',4],
+        	['educational',7],
+        	['experts',2],
+        	['formal',2],
+        	['life',2],
+        	['openness',3],
+        	['resources',3],
+        	['academic',2],
+        	['amongst',3],
+        	['barriers',2],
+        	['community',3],
+        	['friendly',2],
+        	['integration',2],
+        	['mobile',2],
+        	['practice',3],
+        	['sharing',2],
+        	['students',11],
+        	['teaching',12],
+        	['user',3],
+        	['creating',3],
+        	['focus',4],
+        	['internet',3],
+        	['using',9],
+        	['owned',2],
+        	['dont',7],
+        	['cost',3],
+        	['hardware',2],
+        	['interoperability',2],
+        	['multidirectional',2],
+        	['process',2],
+        	['silo',2],
+        	['kids',5],
+        	['passions',2],
+        	['primary',4],
+        	['schools',5],
+        	['design',4],
+        	['opportunities',2],
+        	['notes',2],
+        	['store',2],
+        	['vles',2],
+        	['contractual',2],
+        	['driven',2],
+        	['commercial',2],
+        	['elite',2],
+        	['institutions',10],
+        	['lot',2],
+        	['personal',3],
+        	['professional',2],
+        	['thinking',3],
+        	['twitter',2],
+        	['stakeholders',2],
+        	['continue',2],
+        	['curriculum',2],
+        	['government',2],
+        	['risk',3],
+        	['closed',2],
+        	['silos',3],
+        	['league',2],
+        	['models',5],
+        	['obsession',2],
+        	['onto',2],
+        	['tables',2],
+        	['tests',2],
+        	['developed',3],
+        	['money',5],
+        	['world',3],
+        	['build',3],
+        	['culture',4],
+        	['structures',2],
+        	['effort',2],
+        	['lecturers',4],
+        	['virtual',2],
+        	['help',3],
+        	['central',3],
+        	['consultation',2],
+        	['decisions',4],
+        	['faculties',3],
+        	['management',4],
+        	['services',2],
+        	['gap',2],
+        	['putting',2],
+        	['staff',6],
+        	['move',3],
+        	['care',3],
+        	['individual',2],
+        	['teacher',2],
+        	['training',9],
+        	['isnt',2],
+        	['web',2],
+        	['stuff',2],
+        	['develop',2],
+        	['difficult',4],
+        	['proved',4],
+        	['share',2],
+        	['communities',2],
+        	['spread',2],
+        	['promise',2],
+        	['pedagogy',2],
+        	['funding',2],
+        	['whats',2],
+        	['device',3],
+        	['expensive',2],
+        	['institutional',3],
+        	['interactive',2],
+        	['pilot',2],
+        	['invest',3],
+        	['investment',4],
+        	['autumn',2],
+        	['bodies',4],
+        	['cross',2],
+        	['jisc',3],
+        	['lsis',2],
+        	['sector',4],
+        	['start',2],
+        	['technological',2],
+        	['review',2],
+        	['create',3],
+        	['remove',3],
+        	['choice',2],
+        	['entitlement',2]
+        	]);
+		tcArray[7] = dt;
+		dt = null;
+
+	
+	/* The data for the radar plots is an array of DataTable objects
+		arrat index is the question number (incl the pseudo-question)
+		the DataTable is for direct use with the imagechart 
+		NB extra scores[q,1] ensures that the plot "joins-up" to make a loop */
+	radarArray = new Array(8);
+
+	var dt = new google.visualization.DataTable();
+        dt.addColumn('number');
+        dt.addRows([
+        	[0.7490872],
+        	[1],
+        	[0.9510252],
+        	[0.3607143],
+        	[0.1487088],
+        	[0.2408880],
+        	[0.5544764],
+        	[0.3302314],
+        	[0.7490872]
+        	]);
+	radarArray[0] = dt;
+	dt = null;
+
+	var dt = new google.visualization.DataTable();
+        dt.addColumn('number');
+        dt.addRows([
+        	[0.6082588],
+        	[1],
+        	[0.7169267],
+        	[0.315625],
+        	[0.03469873],
+        	[0.1686216],
+        	[0.6653716],
+        	[0.05779049],
+        	[0.6082588]
+        	]);
+	radarArray[1] = dt;
+	dt = null;
+
+	var dt = new google.visualization.DataTable();
+        dt.addColumn('number');
+        dt.addRows([
+        	[0.4194888],
+        	[1],
+        	[0.6827873],
+        	[0.4208333],
+        	[0.1619274],
+        	[0.5995434],
+        	[0.6653716],
+        	[0.3852700],
+        	[0.4194888]
+        	]);
+	radarArray[2] = dt;
+	dt = null;
+
+	var dt = new google.visualization.DataTable();
+        dt.addColumn('number');
+        dt.addRows([
+        	[0.6769127],
+        	[0.9729426],
+        	[0.6562115],
+        	[0.2995951],
+        	[0.214087],
+        	[0.7469358],
+        	[1],
+        	[0.2194218],
+        	[0.6769127]
+        	]);
+	radarArray[3] = dt;
+	dt = null;
+
+	var dt = new google.visualization.DataTable();
+        dt.addColumn('number');
+        dt.addRows([
+        	[0.494667],
+        	[0.9017517],
+        	[0.8525141],
+        	[0.1751479],
+        	[0.3610343],
+        	[0.5458377],
+        	[1],
+        	[0.3206934],
+        	[0.494667]
+        	]);
+	radarArray[4] = dt;
+	dt = null;
+
+	var dt = new google.visualization.DataTable();
+        dt.addColumn('number');
+        dt.addRows([
+        	[0.696173],
+        	[1],
+        	[0.9805988],
+        	[0.3760638],
+        	[0.1624196],
+        	[0.4305232],
+        	[0.5190842],
+        	[0.1475502],
+        	[0.696173]
+        	]);
+	radarArray[5] = dt;
+	dt = null;
+
+	var dt = new google.visualization.DataTable();
+        dt.addColumn('number');
+        dt.addRows([
+        	[0.5593184],
+        	[1],
+        	[0.7852054],
+        	[0.2525],
+        	[0],
+        	[0.07494292],
+        	[0.3696509],
+        	[0.3852700],
+        	[0.5593184]
+        	]);
+	radarArray[6] = dt;
+	dt = null;
+
+	var dt = new google.visualization.DataTable();
+        dt.addColumn('number');
+        dt.addRows([
+        	[0.6205661],
+        	[1],
+        	[0.8168055],
+        	[0.3234504],
+        	[0.1548538],
+        	[0.41807],
+        	[0.6965323],
+        	[0.2483558],
+        	[0.6205661]
+        	]);
+	radarArray[7] = dt;
+	dt = null;
+
+}
+</script>
+  
+<script language="javascript" type="text/javascript">
+	function loadPage(){
+		initOptions();
+		initData();
+		currentQ = pseudoQ;
+		document.getElementById('selQ').options[currentQ].selected=true;
+		draw();
+	}
+	// handler for a change of question in focus
+	function qChangeHandler(qIndex){
+		currentQ = qIndex;
+		document.getElementById('qdiv').innerHTML="";
+		draw();
+	}
+</script>
+</head>
+
+<body>
+<h1>Seven Questions Term Clouds and Sentiment Analysis: ALT-C 2011</h1>
+<div>
+Choose a question: <select id="selQ" onclick="qChangeHandler(this.options[this.selectedIndex].value);">
+<option value="0">Questions for the Oracle about 2025</option>
+<option value="1">A Favourable Outcome by 2025</option>
+<option value="2">An Unfavourable Outcome</option>
+<option value="3">How Will Culture and Institutions Need to Change</option>
+<option value="4">Lessons from the Past</option>
+<option value="5">Decisions to be Made and Actions Taken</option>
+<option value="6">If You Had a  Magic Wand    </option>
+<option value="7">All Questions</option>
+</select>
+</div>
+<div id="tcdiv" class="nice"></div>
+<div id="rdiv" class="nice"></div>
+<div id="qdiv" class="reduced">Click on a term to find how it was used.</div>
+
+<script type="text/javascript">
+	//google.load("visualization", "1");
+	google.load("visualization", "1", {packages:["imagechart"]});
+      	google.setOnLoadCallback(loadPage);
+      	var tc;
+      	var radar;
+      	function draw() {
+      		//term cloud
+        	tc = new TermCloud(document.getElementById('tcdiv'));
+        	tc.draw(tcArray[currentQ], tcOptions);//options can be {target: '_self'} etc
+        	google.visualization.events.addListener(tc, 'select', handleTermSelect);
+        	//radar plot
+        	radar = new google.visualization.ImageChart(document.getElementById('rdiv'));
+        	radar.draw(radarArray[currentQ], radarOptions);
+        	
+        	//if this is inside a google gadget then resize
+        	if(gadgets){
+			gadgets.window.adjustHeight();
+		}
+      	}
+	function handleTermSelect() {
+		var selection = tc.getSelection();
+  		if (selection.length > 0) {
+			selTerm=(tcArray[currentQ].getValue(selection[0].row,0));
+			//if the pseudo-question ("all") then aggregate, otherwise show responses for the current question
+			var ragArray = termUses[selTerm];
+			if(currentQ == pseudoQ){
+				resps='Responses (to any question) containing <b>'+selTerm+':</b><br/><br/>';
+				for (var q = 0; q<ragArray.length; q++) {
+					respIndexes=ragArray[q];
+					//an array of indexes
+					for(var r=0;r<respIndexes.length;r++){
+						resps+='"'+responses[respIndexes[r]-1][q]+'"<br/><br/>';
+					}
+				}
+			}else{
+				resps='Responses containing <b>'+selTerm+':</b><br/><br/>';
+				var respIndexes=ragArray[currentQ];
+				//an array of indexes
+				for(var r=0;r<respIndexes.length;r++){
+					resps+='"'+responses[respIndexes[r]-1][currentQ]+'"<br/><br/>';
+				}
+			}
+			resps = resps.replace('\n','<br/>');
+			document.getElementById('qdiv').innerHTML = resps;
+			//if this is inside a google gadget then resize
+        		if(gadgets){
+				gadgets.window.adjustHeight();
+			}
+		}
+	}
+
+    </script>
+
+</body>
+</html>
+
