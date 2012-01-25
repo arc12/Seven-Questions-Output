@@ -1,0 +1,1532 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Seven Questions Term Clouds and Sentiment Analysis: JISC Innov 2012</title>
+  <meta name="AUTHOR" content="Adam Cooper" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" type="text/css" href="http://visapi-gadgets.googlecode.com/svn/trunk/termcloud/tc.css"/>
+  <script type="text/javascript" src="http://visapi-gadgets.googlecode.com/svn/trunk/termcloud/tc.js"></script>
+  <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    
+  <style type="text/css">
+	body { background-color: #efefef; padding: 10px;}
+	div.nice { width: 270px; float: left; padding: 10px;}
+	div.clear { clear: both;} 
+	div.reduced {font-size: 12px; font-family: arial; color: black; clear: both;}
+  </style>
+
+<!-- these are for the term cloud words -->
+ <style type="text/css">
+.term-cloud {font-family: arial; font-size: 10px;}
+.term-cloud-1 {font-size: 12px; color: #607ec5; }
+.term-cloud-2 {font-size: 14px; color: #607ec5; }
+.term-cloud-3 {font-size: 18px; color: #133b97; }
+.term-cloud-4 {font-size: 22px; color: #133b97; }
+.term-cloud-5 {font-size: 26px; color: #002a8b; }
+.term-cloud-6 {font-size: 32px; color: #002a8b; }
+.term-cloud-7 {font-size: 36px; color: #081122; }
+.term-cloud-8 {font-size: 40px; color: #081122; }
+.term-cloud-9 {font-size: 44px; color: #000000; }
+.term-cloud-error {font-family: arial; font-size: 10px; color: red; }
+.term-cloud-link {text-decoration: none; }
+.term-cloud-link:hover {text-decoration: underline;}
+</style>
+  
+  <script language="javascript" type="text/javascript">
+  	var pseudoQ;
+  	var qTitles;
+  	var nResponses;
+  	var responses;
+  	var tcArray;
+  	var radarArray;
+  	var termUses;
+  	var currentQ;
+  	var tcOptions = null;
+  	var radarOptions;
+  	var gadgets;
+
+	//options for imageChart to make it plot a radar with the appropriate category labels
+	function initOptions(){
+		radarOptions = {
+			chtt: 'Sentiment Analysis',
+			chxl: '0:|Positive|Strong|Active|Role|Negative|Weak|Passive|Object',
+			chxp: '',
+			chxr: '',
+			chxs: '0,000000',
+			chf: 'bg,s,EFEFEF',
+			chxtc: '',
+			chxt: 'x',
+			chs: '250x250',
+			cht: 'r',
+			chco: 'FF0000',
+			chds: '0,1',
+			chls: '2,4,0',
+			chm: 'B,FF000080,0,0,0'
+		};
+	}
+
+	//data from R will be injected using Brew, the bulk coming over as JSON
+	// NB: R indexes start from 1, JS ones start at 0; all should be rebased to JS at the earliest point
+  	function initData(){
+  	pseudoQ = 7;
+
+	//the question headings, including the "all questions" pseudo-qestion
+	qTitles = ["Questions for the Oracle about 2025","A Favourable Outcome by 2025","An Unfavourable Outcome","How Will Culture and Institutions Need to Change","Lessons from the Past","Decisions to be Made and Actions Taken","If You Had a  Magic Wand    ","All Questions"];
+	/*the responses as a 2-dim array. 1st index is response index, 2nd is question #
+		NB: no column for "all questions" */
+	nResponses = 20;
+	responses = [
+	
+		["AH: i know very little about open licences. i don't the past or history or the current agendas around open licences. i . i will give a flabby answer.","no","nope. oh ok, all data would be closed and not available to society and students. its funded by the public and should be available to the public. thats probably my basic [stance].","ok, if its the opposite from open licences its siloed and departmental, there wouldn't be a holistic view across the enterprise. the data wouldn't drive the strategic needs of the organisation.","one of the lessons learnt is about efficiencies - not being able to exploit the data leads to duplication and inefficiences","from an institutional perspective its trying to get institutions to adopt these technologies to use them in their systems, to use data and analytics to drive decision making in the organisation.","people are more collaborative in nature. they want to share, less this is my data, this is my system mentality, that its all for the greater good. that institutions have a clear direction and strategy to support this."]		,
+	
+		["Will they become more common?  What are the real obstacles to adoption?  Perhaps entrenchment in traditional ways of doing things.  Open licences are very useful in certain instances, for certain things, and this range might be more limited than we think.  Open licences get abused and get a bad name, so people become wary.  People want to see them working well before they commit.","Sharing their lecture notes, open educational resources, etc.  Publishing \/ sharing research data.  Open access publishing.  Probably won't apply to patents, but maybe more open innovations.","things clamp down; we stop taking advantage of the internet and what it offers. We go back to a pre-internet way of doing things.  If UK didn't take up open licences and others did, then UK might lose out.","Need to be more open to what advantages open licences can bring.  They need to investigate what these benefits could be for them.  They need to be more open-minded.  Because people will always be worried that they are losing intellectual property.  They need to be reassured that openning up intellectual property offers new opportuntiies.  Being open to new economic business models.",".","Government and EU could use open licences for their own material as much as possible, and promote it via open innovation awards.","Make people be more open to the idea of open licences."]		,
+	
+		["Have reactionary business interests\/government intervened?\nHave sufficient business models for exposing and exploiting open data evolved?","Sustainable ecosystem of reuse and mashing-up","Control of big services restricted to a few major players","Have to have a belief and awareness of the benefits of open data would have for them.\nAssociated infrastructure and staff to expose open data ","Locating and convincing rights holders - is difficult in practice.","JISC helping institutions to understand and implement open data.\nJISC being involved at policy level re: orphaned works ","Expose everything."]		,
+	
+		["Adoption - we may be living in an open bubble and future context may be very different due to changes in higher education business models, commercial sector and government.\nDoes open have the same kind of cultural value that is currently placed on commercial models?\nDoes open mean free, if not what kind of business models have sprung up around it?","Potential for radical changes to current models such as education and business.\nOpen education resources become a real driver for the way that education is managed. This would occur in a global context and will make education more accessible. People start with free resources and layer paid for services on top as needed.","May see the rise of openwashing (similar to greenwashing) and the whole concept of open may be coopted with little actual change taking place.\nOpen only works in an environment that allows it to flourish, if the wider context does not support the potential of open then the possibilities will not be realised.","Division between formal and informal types of educational outputs. Current system favours the formal, if you wanted a more accessible education system, more attention and more value needs to be placed on informal educational resources such as blogs etc.\nThe scholarly communications lifecycle will need significant disruption so that the drivers behind academic achievement also take account of these other approaches.","Beware of the extremes and the ideological crusades that lead to polarisation and context. This may be necessary but some way has to be found to mitigate the polarisation.","Demonstrating the value of open. Doing small tactical interventions that demonstrate value and benefits without requiring large scale change to practice. Guerilla war rather than military campaign.","Behave with great responsibility. Like spiderman."]		,
+	
+		["Inconsitent, lack of understanding of open licences. Risks around unintended consequences. Issues around sustainability, monetisation and business models. Oracle - what the success stories, the strongest fmx for implementation and adoption of licences.","New businesses coming in on back of open licences and data. See big players working and supporting start ups. New business models emerged. Consistent IPR regime and movement towards that goal.","Misunderstanding and misapplied - might be consequences. Businesses might be choked or go out of business. Undesired consequences.","Univs need to recognise more value in unconventional outputs. ","Not enough knowledge to give a valuable response.","Need to achieve more clarity in range of licences and guidance. Fairly urgent work on business practice\/models. Lobby UK and EU to stop entrenchment of digital rights management regimes.",""]		,
+	
+		["The battle between commercial versus Open  - e.g. SOPA.","Open accreditation of the successful completion of truly open courses (e.g. MIT's AI course). The establishment of an open alternative to paid-for university accreditation","Commodification of OERs leads to commercial exploitation based on skimming  the 'easier' educational challenges and leaving the deeper, more difficult aspects unfunded.\nOpen Licenses become restricted through legal action.","Embracing internationalisation of educational opportunities","Open means different things to different people - we need to separate the message from the messengers","","Move to Hawaii"]		,
+	
+		["would majority use?\nhow many types of licence?\nwould they coexist with restrictive licences or dominate?\nwould they work in different sectors?\nwould technology enable content creators to embed?\nhow easy for users to understand?","repackage content - bring together different types","use content without rights, pirating, plagiarism","be more open and less protective, develop new business models","adoption of and awareness licenses is slower than anticipated \nlicenses not embedded into content","free orphan works\n\nJISC provide exemplar business models","proper use of open licensing becomes routine "]		,
+	
+		["Open licenses will not stop. Government policies may not be favourable for open data (in particular) or open source.  United States currently has favourable policies.  Are there other models for open licenses: open hardware? open geonomics?  What other areas will develop for open licensing?","Small points rather than grand.  Open bibliographies more important.  Good access to scientific data behind publications.","Public policies to open licenses could be reversed.  Shift to money-making, revenue-generation coming back into vogue.  Changes in patent law could make it more difficult to apply open license.","Change required in the instinctive copyright with all rights reserved.  Move away from habiitual reflex to protect intellectual property through standard copyright.","Need for workable business model.  One lesson from the past is that putting an open license does not get anywhere.  Also that careless application of open licensing can do damage: for example, investments stifled if open licenses are applied too early.","Formulation of robust economic models for cost and benefit.  Models will dictate changes in legislation.","Make address and location data all covered by open licenses.  For example, postal data, parks data, and bus information should be all published with open licensing to make all this accessible to the public for re-use."]		,
+	
+		["Will the current mindset regarding commercial perceptions that open data leads to loss of income prevail. Will intelligent systems and new business models evolve to make this question redundant.","More systematic re-use of content from different sources. Based on the premise that re-use of content and data can generate new opportunities for business as well as education.","If open licenses are abused at the expense of rightsholders, there may be backlash against open information","Need a better and more consistent understanding of digital literacy to enable staff and students to exploit open data whilst respecting rightsholders","If presented clearly and attractively, open licensing can be explained and taken up. People now understand that the use of open licenses and opening up data early can promote the use of systems and increase momentum","Continuing to lobby and create an environment where open licenses and fair use can continue","developer a deeper understanding amongst government and policy makers about the correct balance between protecting rightsholders and allowing the free-flow of information for education and research"]		,
+	
+		["Risks associated with openness - will the internet survive in its open free electronic frontier form or will it disapear with advent of more controlled sensorship.\nFuture government legislation \nLack of moral fibre in entertainment industries.\nUS extradiction laws","More effective sharing of content and data. More acess to content and resources,\nCulture of sharing and openess","Advent or censorship, more restrictions, plagarism and theft (which are also current issues).","More staff development required on making more effective use of open licences\nBuy in from strategic managers and leadership in realising the benefits. Sell the business case and benefits for their institution.\nConsider student views on it and develop their digital literacies skills in being aware of the implications of thier use.","","",""]		,
+	
+		["Have the issues around bringing together open licences, sharing data, access and protecting data been resolved? Are creators still being rewarded?","Being able to do new things with available data - things that previously hadn't been thought of or hadn't been possible. New business models emerging from those ideas.","Abuse of personal data by unscrupulous people for business uses that the owners of the data never wished for...","Need to have people responsible for the different kinds of data and intellectual property - needs to be managed by an expert or licensing guru that can keep track of developments and guide staff.","Hardest thing was persuading businesses of the value of opening up.","Licences need to be simple, clear, easily understood. Reduce barriers to open licensing. Stopping governments complicating or restricting licensing. Consistency across nations.","Consistent licensing policy across the world."]		,
+	
+		["Have we articulated the benefits of open data well? Carrot and Sticks","New innovation, more research","Institutions not benefiting from the openness in terms of income streams, e.g. commercial companies creating a business model around the open data which does not actually provide much worth for the data provider.","Institutions need to start to look at the value of their data, content, and look at the business models around that. Need to understand patents, IP and relationship to open culture\n\nE.g What are the IP implications of patenting a product \/ output based on open data","Back in 2000, we were just starting to understand the web. There was a lack of clear policy at an national and instituoinal level. We inherited a tradition based on non-digital forms of copyright.\n\nProviding better clarity on open licences and the opportunties that can be dervied - this needs to come from bodies of startegic importance","Internationally, JISC needs to be involved open policies and licences across domains, with the aim of being able to share content and data across boundaries. After all, research is global.\n\nWork with institutions so that they understand the opportunities that exist with their own data. Where is there room to unexploit, particularly with untapped data sets? ","Get rid of publishers ...\n(Who would organise peer review then?)\nThere are other models\n(Which are?)\nDevelop other models "]		,
+	
+		["Will Government fully realise benefits of open licencing? and begin to take a fimr line with corporate lobbyists\nAre we any closer to making copyright work in a digital age.","Effective economy based on a system which allows open licencing, honours copyright and provides for reasonable compensation for creativity..","One of two extremes, \n1. copyright completely ignored, open piracy swamps legal structures and creativity becomes devalued...\n2. Open licencing deemed to have failed completely, shring of content prohibitively expensive and legally perillous.","Value of open licencing needs to be understood at an institutional level, with the use and production  of open licenced material becoming normalised and common place.","People attach different meanings to open, motives are important, ","Need some way to indemnify the use of open licenced material (eg OSS) \nfrom predatory commercial practice.\n","cheerfully paid voluntary global tax to support  wikipedia, and similar public good activities..."]		,
+	
+		["How can we avoid licencng being built into propriatary technology stakes? e.g apple \nHow can be make smart machine readable licences?\nHow can we promote attribution asnd build it into our model of value in education?\nIs enforcement a red herring?","Services around content are easy to build\nPeople get value and recognistion from applying open licencing to their content\nExcellent standards for machine readable licencing\nA wide variety of business models for public sector for releasing open content","That open licencing stays or regresses to minority ethical choice, like choosing food\nThat the left wing supporters of the web have a big fight about open and become marginalised \nThe purists win out and the attribution chain is broken","More clarity in staff contracts in IP\nGreater understanding by everyone of what the licences mean\nCritical mass of openly licenced content so people can build services around it\nThe REF and promotion criteria for acedemics needs to reward open sharing \nThe pedegogy experts need to stop owning the OER agenda\nThe ecology of open content should have low quality thresholds. The discussion about quality happens elsewhere","Iconography is very important\nThink global like creative commons\nDon't build content silos: licence is just one property of content \nBaby steps are fine and every step in valuable\nComfort zones are important to understand","Good advice on embedded licences\nContinue with friendly tools\nCollaborate more with other organisations supporting open licencing in education\nHelp service developers make risk informed choices and we need to continue to mandate open licences on the work we fund","Fund CAPRET and creative commons and open attribute to implement the model of machine readable licences on every common platform "]		,
+	
+		["assumption: capitalism carries on so IPR and copyright will continued to be enforced - enshrined in law, supported through the legal systems because they are used to support particular business models.\n\ncurrently there is a mixed economy of open and closed licences. We think that the open licences are getting much more traction. However, the current IPR arrangements haven't really broken down. There are good examples and hopeful stuff  haven't seen a significant change. \n\nwe do not know what will happen by 2025. eg whether 'open' licences become successful and the norm. Does the 'open innovation' approach get subverted by the commercial sector? Government policy?","cost savings and more efficiency in the JISC sectors (and beyond)\n\ne.g. through:\n- open data, linked data\n- builiding on and re-using code, products\n- more coordination of 'projects' - too many people trying to solve the same problems using different approaches\n- faster solutions to major problems e.g. health challenges; water; conflict\n- unforseen benefits\n- faster innovation of products and more user engagement in development","exploitation of open content and systems by the commercial sector in appropriate ways\n\nthat licencing regimes are stricted than at present  - the internet dies! or becomes a series of closed rooms that are only accessible by toll\n\nthat licencing becomes so complex that normal people can't understand it (concerned that we are already going down this road!) we need to balance openness and inclusivity with pragmatism.","some industries need to change their mindset and business models fundamentally - they need to take more risks and innovate.\n\nneed to stop equating content assets as their USP, rather focus on service and added value\n\nin particular, the film industry (Hollywood), publishing industry, music industry","simplicity of licences - one licence to rule them all hasn't happened with Creative Commons as there are many derivatives\n\nHargreaves Review should have been allowed to be implemented\n\nThese are global issues but our ability to deal with them internationally and openly are frustrated by local legislation and policy.","JISC should support an ethos of public good but also be pragmatic and realstic. keep the discussion open and the topic on people's agendas.  Be creative and innovative in our thinking  - encourage deep discussion of alternatives, new business models. Invest in exemplars.  Include a wide range of stakeholders - publishers etc  - to listen to their perspectives and try to 'inform' their views. Lobby government and others (eg EC) even more effectively.\n\npolicies and legislation that are:\n\nsimple\nopen\nefficient\neconomic\neffective\nsustainable\n","go back in time and remove the concept of IPR and copyright from people's consciousness and start again!"]		,
+	
+		["govts pro open licences. Will there be a backlash? Can we collect evidence of benefits in time? Will Creattive Common sustain iteself?","People will take all kinds of info from all sources and be creative about how they bring these info sources together to create value - new services, businesses. Enable text mining, data mining. ","They weren't used at all. Reuse of info became impossible at scale. Opportunites of the internet would be lost.\n\nIf misused, their reputation would suffer. The wrong licence could be used for the wrong material e.g non-commercial clauses could be used inappropriately. Individuals could be identified inadvertently by clevel cobinationof rpivate and open data.","Move away from idea of knowledge transfer from unis to business and society. Move towards collaborative education and research. Institutions need to think about their role and how open licences can help.\n\nIncentive structures for institutions  need tochange eg. how they're evaluated. Needs to be culture where collaborative creation of knowledge is rewarded, not just the individual.","Evangelical advocates need to be balanced by pragmatic implementers. More effort should have been put into proving the benefits of oepn lciences, so they seemed less ideaological. Been hard lesson to use open licences across legal jurisdictions. Still learning","Govt and international bodies should use the licences themselves (and JISC). Funders should reward the use of open licences.","Change all publishers to open access."]		,
+	
+		["Who the beneficiaries of open data will actually be. Without this it is difficult to develop a policy around the issue if we don't understand what value acrrues to whom. What will the use cases for open licenses actually turn out to be?","Open licences will enable the join up of data and new discoveries to be made. Ideally we would need advances in medicene and science to be enabled by open licensing allowing data to be searched that is not currently available as it is restricted by commercial licences etc.","Criminal activity would be a major concern if data is too open then loss of income or identity could take place. People might not be aware that the data under open licence might have personal or sensitive information that others could exploit in a negative way. ","Organisations would need to improve the digital literacy of their staff, researchers and students so they were enabled to use open data in a responsible way and to understand its value.","Commercial and vested interests are very powerful lobbiers so therefore education and research needs to do its advocacy more effectively in order to stand a reasonable chance of their views being heard and understood and acted on. \nThe dreams of national libraries and archives have to some extent been thwarted by lack of progress on legal deposit legislation. Also the problem of orphan works has been an inhibitor which does not seem to have a rapid solution. ","Use cases need to be developed including implementations of open licences. Once this has been done these need to be disseminated to make sure the benefits are understood by governments and policy makers. We need positive stories to be told about open licensing that are also comprehensible from a business perspective. This should stop the degree of lobbying against open licensing from the commercial sector. ","Make David Cameron spearhead a mission in government to make open licensing work. "]		,
+	
+		["commercial organisations possibly opposing open licences","finding innovatives uses of data combining different data sets","misuse or tampering of data sets; commercial improper use for profit or for influence...political use","some data will still need to be protected; need to have institutional strategy for which data needs protection and what can be provided as open data","danger that people will not feel confident in using such licences because of lack of understanding, fear of doing something illegal; people will need more support than anticipated","JISC: communciating better to senior management about potential benefits, at the moment work is being done more by technical staff on own initiative and exploration\n\nGeneral priority: identify potential benefits and potential dangers and implications of releasing data through open licences and the use that can be made of it\n\nLegislation harmonisation","national mapping of major data sources  "]		,
+	
+		["will there be viable business models- will the economics of open licenses for technology work\nwill there still be mixed economy\nwill there be broad adoption and acceptance of open rights\nwill there be economic driven clamp down\nwill SOPA\/PIPA etc. still be hot topics\nwill current leap of faith have born fruit - will there be a tried and tested open framework","Effective exploiting internet\/webscale without licensing\/IPR restrictions\nRealisation of data driven research (using datasets without licensing\/IPR restrictions)\nOpen IPR framework allowing grand challenges to be addressed in collaborative ways\nGreater, efficient, effective system\/technology interoperability and integration supported by open IPR framework\nBetter return of investment on public funding as open framework allows fruits of public funding to drive knowledge economy","Movements such as PIPA\/SOPA clamp down on licensing and restricts the use of internet, prevents internet allowing connections across the world. Enhanced digital rights restrictions which impose physical analogue restrictions on digital objects.\nend up at loggerheads rather than collaborating\nNon-digtal\/non-networked look and feel to the online environment\nMore silos","Understanding licensing, and how open can still permit competive advantages - when to apply open, when not to (competitive advantage or sensitive). New skills understanding licensing, economics, legalities, enhancing institutional mission (research, teaching, admin).\n\nCultures - incentives to be open (e.g. open research). publishing systems\/REF which reward\/recognise open models rather than existing model.\n\nLeadership within institutions to push policy changes required \n\nHow to have business conversation with commercial providers which recognise their needs\/restrictions\/environment but allow development of new business models for them\n\nProvision for HE and future sustainability being more dependent on appropriate collaboration rather than competition.\n\nCreative about incentives (outside of traditional model)","Dangers of being too ambitious - trying to be completely open whilst also having commercial content (mixing models too soon)\nNaivety about level of resistance to change\nDanger of being lead by enthusiast\/technologist\/evangelists rather than those who would be impacted\nGet into new blood rather than establishment\nGetting robust balance economic arguments - recognising different communities have different economics","Identify impact of open licenses in economic terms\nempiric examplars and use cases\nresistance (lobby against) to clamp down movements at UK\/EU\/Global levels\ntraining awareness at senior management level (LFHE training programmes etc.) and get open into professional standards frameworks","Global agreement that all publicly funded activities should be open (subject to privacy concerns)\n\nEnsuring open is a professional standard in all professions.\n\nAbolish money"]		,
+	
+		["Will open educational resources flourish - will open licencing make teaching materials more accessible?\nWill there be a rise in litigation when content released under open licence when the licensor does not have the full rights.","Open licences applied to all government generated data and public funded research.","People stop using open licences because they are economically unviable or subject to dispute and litigation.","Higher Education institutions need to find ways to make use of open licences part of their business model. They need to continue to rethink their business and distribution model.","You need the right kind of licence that prevents people from unethically exploiting open licensed stuff. Lesson = we need well written licences.","Get universities to change their business and distribution models by getting a few leading institutions to work on projects that demonstrate new approaches.\n\nFind a publisher JISC can work with to demonstrate the viability of an open licensing model.","Make sure that the wikipedia model is protected from rapacious IP litigants."]		
+	
+		];
+	/* a lookup-object to locate which respopnses to which questions contain a given term
+		object key is the term, object value is a ragged array
+		(1st index is question #, each row is a list of the indeces of responses where that question contains the term in the object key) */
+		termUses = {
+
+"able":
+	[[],[11],[],[],[1],[12],[]],
+"abused":
+	[[2],[],[9],[],[],[],[]],
+"access":
+	[[11],[2,8],[],[],[],[],[16]],
+"accessible":
+	[[20],[4],[15],[4],[],[],[8]],
+"accreditation":
+	[[],[6],[],[],[],[],[]],
+"activities":
+	[[],[],[],[],[],[],[13,19]],
+"actually":
+	[[17],[],[12],[],[],[],[]],
+"adoption":
+	[[2,4,5,19],[],[],[],[7],[],[]],
+"advantage":
+	[[],[],[2],[19],[],[],[]],
+"advantages":
+	[[],[],[],[2,19],[],[],[]],
+"advent":
+	[[10],[],[10],[],[],[],[]],
+"agendas":
+	[[1],[],[],[],[],[15],[]],
+"allowing":
+	[[],[17,19],[19],[],[],[],[9]],
+"allows":
+	[[],[13,19],[4],[],[],[],[]],
+"anticipated":
+	[[],[],[],[],[7,18],[],[]],
+"applied":
+	[[],[20],[],[],[8],[],[]],
+"apply":
+	[[],[2],[8],[19],[],[],[]],
+"approaches":
+	[[],[15],[],[4],[],[20],[]],
+"appropriate":
+	[[],[],[15],[19],[],[],[]],
+"associated":
+	[[10],[],[],[3],[],[],[]],
+"attribution":
+	[[14],[],[14],[],[],[],[]],
+"available":
+	[[],[11,17],[1],[],[],[],[]],
+"aware":
+	[[],[],[17],[10],[],[],[]],
+"awareness":
+	[[],[],[],[3],[7],[19],[]],
+"backlash":
+	[[16],[],[9],[],[],[],[]],
+"balance":
+	[[],[],[15],[],[19],[],[9]],
+"based":
+	[[],[9,13],[6],[12],[12],[],[]],
+"benefits":
+	[[12,13,16],[15],[],[2,3,10],[16],[4,17,18],[]],
+"bodies":
+	[[],[],[],[],[12],[16],[]],
+"bring":
+	[[],[7,16],[],[2],[],[],[]],
+"broken":
+	[[15],[],[14],[],[],[],[]],
+"build":
+	[[14],[14],[],[14],[14],[],[]],
+"business":
+	[[3,4,5,9,15,19],[4,5,9,11,14],[5,11,12],[2,7,10,12,15,16,19,20],[8],[5,7,15,17,20],[]],
+"businesses":
+	[[],[5,16],[5],[],[11],[],[]],
+"challenges":
+	[[],[15,19],[6],[],[],[],[]],
+"change":
+	[[15],[],[4],[8,15],[19],[4,20],[16]],
+"changes":
+	[[4],[4],[8],[19],[],[8],[]],
+"clamp":
+	[[19],[],[2,19],[],[],[19],[]],
+"clarity":
+	[[],[],[],[14],[12],[5],[]],
+"closed":
+	[[15],[],[1,15],[],[],[],[]],
+"collaborative":
+	[[],[19],[],[16],[],[],[1]],
+"coming":
+	[[],[5],[8],[],[],[],[]],
+"commercial":
+	[[4,6,9,15,18],[17],[6,12,15,18],[19],[17,19],[13,17],[]],
+"common":
+	[[2,16],[],[],[13],[],[],[14]],
+"commons":
+	[[],[],[],[],[14,15],[],[14]],
+"completely":
+	[[],[],[13],[],[19],[],[]],
+"concept":
+	[[],[],[4],[],[],[],[15]],
+"consequences":
+	[[5],[],[5],[],[],[],[]],
+"consistent":
+	[[],[5],[],[9],[],[],[11]],
+"content":
+	[[7,20],[7,9,10,14],[7,13,15],[12,14,15],[7,14,19],[12],[]],
+"context":
+	[[4],[4],[4],[],[4],[],[]],
+"continue":
+	[[],[],[],[20],[],[9,14],[]],
+"copyright":
+	[[13,15],[13],[13],[8],[12],[],[15]],
+"cost":
+	[[],[15],[],[],[],[8],[]],
+"create":
+	[[],[16],[],[],[],[9],[]],
+"creative":
+	[[],[16],[],[19],[14,15],[15],[14]],
+"creativity":
+	[[],[13],[13],[],[],[],[]],
+"creators":
+	[[7,11],[],[],[],[],[],[]],
+"culture":
+	[[],[10],[],[12,16],[],[],[]],
+"current":
+	[[1,9,15,19],[4],[10],[4],[],[],[]],
+"currently":
+	[[4,8,15],[17],[],[],[],[],[]],
+"danger":
+	[[],[],[],[],[18,19],[],[]],
+"dangers":
+	[[],[],[],[],[19],[18],[]],
+"data":
+	[[3,8,9,11,12,17],[2,5,8,9,10,11,15,16,17,18,19,20],[1,11,12,16,17,18],[1,3,9,11,12,17,18],[1,9],[1,3,12,18],[1,8,18]],
+"deeper":
+	[[],[],[6],[],[],[],[9]],
+"demonstrate":
+	[[],[],[],[],[],[4,20],[]],
+"develop":
+	[[8,17],[],[],[7,10],[],[],[12]],
+"development":
+	[[],[15],[],[10,19],[],[],[]],
+"difficult":
+	[[17],[],[6,8],[],[3],[],[]],
+"digital":
+	[[13],[],[19],[9,10,17],[],[5],[]],
+"discussion":
+	[[],[],[],[14],[],[15],[]],
+"distribution":
+	[[],[],[],[20],[],[20],[]],
+"dont":
+	[[1,17],[],[],[],[14],[],[]],
+"drive":
+	[[],[19],[],[1],[],[1],[]],
+"driven":
+	[[19],[19],[],[],[],[],[]],
+"easy":
+	[[7],[14],[],[],[],[],[]],
+"economic":
+	[[19],[],[],[2],[19],[8,15,19],[]],
+"economics":
+	[[19],[],[],[19],[19],[],[]],
+"economy":
+	[[15,19],[13,19],[],[],[],[],[]],
+"education":
+	[[4,14],[4,9],[],[4,16,20],[17],[14],[9]],
+"educational":
+	[[20],[2],[6],[4,6],[],[],[]],
+"effective":
+	[[],[10,13,19],[],[10],[],[15],[]],
+"effectively":
+	[[],[],[],[],[17],[15],[]],
+"efficient":
+	[[],[19],[],[],[],[15],[]],
+"embedded":
+	[[],[],[],[],[7],[14],[]],
+"enable":
+	[[7],[16,17],[],[9],[],[],[]],
+"enabled":
+	[[],[17],[],[17],[],[],[]],
+"entrenchment":
+	[[2],[],[],[],[],[5],[]],
+"environment":
+	[[],[],[4,19],[],[],[9],[]],
+"establishment":
+	[[],[6],[],[],[19],[],[]],
+"etc":
+	[[19],[2,17],[],[4],[],[15,19],[]],
+"example":
+	[[],[],[],[],[8],[],[8]],
+"exploit":
+	[[],[],[17],[9],[1],[],[]],
+"exploitation":
+	[[],[],[6,15],[],[],[],[]],
+"exploiting":
+	[[3],[19],[],[],[20],[],[]],
+"expose":
+	[[],[],[],[3],[],[],[3]],
+"extremes":
+	[[],[],[13],[],[4],[],[]],
+"faster":
+	[[],[15],[],[],[],[],[]],
+"favourable":
+	[[8],[],[],[],[],[],[]],
+"feel":
+	[[],[],[19],[],[18],[],[]],
+"flourish":
+	[[20],[],[4],[],[],[],[]],
+"formal":
+	[[],[],[],[4],[],[],[]],
+"framework":
+	[[19],[19],[],[],[],[],[]],
+"free":
+	[[4,10],[4],[],[],[],[7],[]],
+"fund":
+	[[],[],[],[],[],[14],[14]],
+"funded":
+	[[],[20],[1],[],[],[],[19]],
+"funding":
+	[[],[19],[],[],[],[],[]],
+"future":
+	[[4,10],[],[],[19],[],[],[]],
+"getting":
+	[[15],[],[],[],[19],[20],[]],
+"global":
+	[[],[4],[],[],[14,15],[12],[13,19]],
+"government":
+	[[4,8,10,13,15],[20],[],[],[],[2,15],[9,17]],
+"governments":
+	[[],[],[],[],[],[11,17],[]],
+"grand":
+	[[],[8,19],[],[],[],[],[]],
+"hadnt":
+	[[],[11],[],[],[],[],[]],
+"havent":
+	[[15],[],[],[],[],[],[]],
+"help":
+	[[],[],[],[16],[],[14],[]],
+"idea":
+	[[],[],[],[16],[],[],[2]],
+"identify":
+	[[],[],[],[],[],[18,19],[]],
+"implement":
+	[[],[],[],[],[],[3],[14]],
+"implications":
+	[[],[],[],[10,12],[],[18],[]],
+"incentives":
+	[[],[],[],[19],[],[],[]],
+"income":
+	[[9],[],[12,17],[],[],[],[]],
+"industries":
+	[[10],[],[],[15],[],[],[]],
+"industry":
+	[[],[],[],[15],[],[],[]],
+"info":
+	[[],[16],[16],[],[],[],[]],
+"informal":
+	[[],[],[],[4],[],[],[]],
+"information":
+	[[],[],[9,17],[],[],[],[8,9]],
+"innovation":
+	[[15],[12,15],[],[],[],[2],[]],
+"institutional":
+	[[],[],[],[13,18,19],[],[1],[]],
+"institutions":
+	[[],[],[12],[12,16,19,20],[],[1,3,12,20],[1]],
+"intellectual":
+	[[],[],[],[2,8,11],[],[],[]],
+"internationally":
+	[[],[],[],[],[15],[12],[]],
+"internet":
+	[[10],[],[2,15,16,19],[],[],[],[]],
+"involved":
+	[[],[],[],[],[],[3,12],[]],
+"ipr":
+	[[15],[5,19],[],[],[],[],[15]],
+"issues":
+	[[5,11],[],[10],[],[15],[],[]],
+"jisc":
+	[[],[15],[],[],[],[3,7,12,15,16,18,20],[]],
+"kinds":
+	[[],[16],[],[11],[],[],[]],
+"knowledge":
+	[[],[19],[],[16],[5],[],[]],
+"lack":
+	[[5,10],[],[],[],[12,17,18],[],[]],
+"law":
+	[[15],[],[8],[],[],[],[]],
+"lead":
+	[[],[],[],[],[4,19],[],[]],
+"leadership":
+	[[],[],[],[10,19],[],[],[]],
+"leads":
+	[[9],[],[6],[],[1],[],[]],
+"legal":
+	[[15],[],[6,13],[],[16,17],[],[]],
+"legislation":
+	[[10],[],[],[],[15,17],[8,15,18],[]],
+"lesson":
+	[[],[],[],[],[8,16,20],[],[]],
+"level":
+	[[],[],[],[13],[12,19],[3,19],[]],
+"licenced":
+	[[],[],[],[13,14],[],[13],[]],
+"licensingipr":
+	[[],[19],[],[],[],[],[]],
+"literacy":
+	[[],[],[],[9,17],[],[],[]],
+"litigation":
+	[[20],[],[20],[],[],[],[]],
+"little":
+	[[1],[],[4],[],[],[],[]],
+"lobby":
+	[[],[],[],[],[],[5,9,15,19],[]],
+"look":
+	[[],[],[19],[12],[],[],[]],
+"loss":
+	[[9],[],[17],[],[],[],[]],
+"machine":
+	[[14],[14],[],[],[],[],[14]],
+"major":
+	[[],[15],[3,17],[],[],[],[18]],
+"makers":
+	[[],[],[],[],[],[17],[9]],
+"managed":
+	[[],[4],[],[11],[],[],[]],
+"management":
+	[[],[],[],[],[],[5,18,19],[]],
+"material":
+	[[],[],[16],[13],[],[2,13],[]],
+"mean":
+	[[4],[],[],[14],[],[],[]],
+"mindset":
+	[[9],[],[],[15],[],[],[]],
+"mining":
+	[[],[16],[],[],[],[],[]],
+"mission":
+	[[],[],[],[19],[],[],[17]],
+"mixed":
+	[[15,19],[],[],[],[],[],[]],
+"model":
+	[[14],[],[12],[19,20],[8],[20],[14,20]],
+"models":
+	[[3,4,5,8,9,15,19],[4,5,11,14],[],[2,7,12,15,19],[19],[7,8,15,20],[12]],
+"move":
+	[[],[],[],[8,16],[],[],[6]],
+"movements":
+	[[],[],[19],[],[],[19],[]],
+"national":
+	[[],[],[],[],[12,17],[],[18]],
+"offers":
+	[[],[],[2],[2],[],[],[]],
+"openly":
+	[[],[],[],[14],[15],[],[]],
+"openness":
+	[[10],[],[12,15],[],[],[],[]],
+"opportunities":
+	[[],[9],[],[6],[],[12],[]],
+"organisation":
+	[[],[],[],[1],[],[1],[]],
+"organisations":
+	[[18],[],[],[17],[],[14],[]],
+"orphan":
+	[[],[],[],[],[17],[7],[]],
+"outputs":
+	[[],[],[],[4,5],[],[],[]],
+"paid":
+	[[],[4],[],[],[],[],[13]],
+"particular":
+	[[8,15],[],[],[15],[],[],[]],
+"past":
+	[[1],[],[],[],[8],[],[]],
+"patents":
+	[[],[2],[],[12],[],[],[]],
+"people":
+	[[2],[4,14,15,16],[11,15,17,20],[2,11,14],[6,9,13,18,20],[],[1,2]],
+"peoples":
+	[[],[],[],[],[],[15],[15]],
+"personal":
+	[[],[],[11,17],[],[],[],[]],
+"perspective":
+	[[],[],[],[],[],[1,17],[]],
+"placed":
+	[[4],[],[],[4],[],[],[]],
+"players":
+	[[],[5],[3],[],[],[],[]],
+"polarisation":
+	[[],[],[],[],[4],[],[]],
+"policies":
+	[[8],[],[8],[],[],[12,15],[]],
+"policy":
+	[[15,17],[],[],[19],[12,15],[3,17],[9,11]],
+"potential":
+	[[],[4],[4],[],[],[18],[]],
+"practice":
+	[[],[],[],[],[3],[4,13],[]],
+"pragmatic":
+	[[],[],[],[],[16],[15],[]],
+"prevents":
+	[[],[],[19],[],[20],[],[]],
+"probably":
+	[[],[2],[1],[],[],[],[]],
+"products":
+	[[],[15],[],[],[],[],[]],
+"professional":
+	[[],[],[],[],[],[19],[19]],
+"projects":
+	[[],[15],[],[],[],[20],[]],
+"promote":
+	[[14],[],[],[],[9],[2],[]],
+"property":
+	[[],[],[],[2,8,11],[14],[],[]],
+"protected":
+	[[],[],[],[18],[],[],[20]],
+"protecting":
+	[[11],[],[],[],[],[],[9]],
+"provide":
+	[[],[],[12],[],[],[7],[]],
+"public":
+	[[],[14,19,20],[1,8],[],[],[15],[8,13]],
+"publishers":
+	[[],[],[],[],[],[15],[12,16]],
+"publishing":
+	[[],[2],[],[15,19],[],[],[]],
+"quality":
+	[[],[],[],[14],[],[],[]],
+"range":
+	[[2],[],[],[],[],[5,15],[]],
+"readable":
+	[[14],[14],[],[],[],[],[14]],
+"real":
+	[[2],[4],[],[],[],[],[]],
+"reasonable":
+	[[],[13],[],[],[17],[],[]],
+"recognise":
+	[[],[],[],[5,19],[],[],[]],
+"regimes":
+	[[],[],[15],[],[],[5],[]],
+"releasing":
+	[[],[14],[],[],[],[18],[]],
+"required":
+	[[],[],[],[8,10,19],[],[],[]],
+"research":
+	[[],[2,12,19,20],[],[16,19],[17],[12],[9]],
+"resistance":
+	[[],[],[],[],[19],[19],[]],
+"resources":
+	[[20],[2,4,10],[],[4],[],[],[]],
+"responsible":
+	[[],[],[],[11,17],[],[],[]],
+"restricted":
+	[[],[17],[3,6],[],[],[],[]],
+"restrictions":
+	[[],[19],[10,19],[],[],[],[]],
+"reuse":
+	[[],[3,9],[16],[],[],[],[8]],
+"review":
+	[[],[],[],[],[15],[],[12]],
+"reward":
+	[[],[],[],[14],[],[16],[]],
+"rewarded":
+	[[11],[],[],[16],[],[],[]],
+"rights":
+	[[19,20],[],[7,19],[8],[3],[5],[]],
+"rightsholders":
+	[[],[],[9],[9],[],[],[9]],
+"rise":
+	[[20],[],[4],[],[],[],[]],
+"risks":
+	[[5,10],[],[],[15],[],[],[]],
+"robust":
+	[[],[],[],[],[19],[8],[]],
+"scale":
+	[[],[],[16],[],[],[4],[]],
+"sector":
+	[[4,15],[14],[15],[],[],[17],[]],
+"sectors":
+	[[7],[15],[],[],[],[],[]],
+"senior":
+	[[],[],[],[],[],[18,19],[]],
+"sensitive":
+	[[],[],[17],[19],[],[],[]],
+"service":
+	[[],[],[],[15],[],[14],[]],
+"services":
+	[[],[4,14,16],[3],[14],[],[],[]],
+"sets":
+	[[],[18],[18],[],[],[12],[]],
+"share":
+	[[],[],[],[],[],[12],[1]],
+"sharing":
+	[[11],[2,10],[],[14],[],[],[]],
+"significant":
+	[[15],[],[],[4],[],[],[]],
+"silos":
+	[[],[],[19],[],[14],[],[]],
+"similar":
+	[[],[],[4],[],[],[],[13]],
+"simple":
+	[[],[],[],[],[],[11,15],[]],
+"skills":
+	[[],[],[],[10,19],[],[],[]],
+"society":
+	[[],[],[1],[16],[],[],[]],
+"sources":
+	[[],[9,16],[],[],[],[],[18]],
+"staff":
+	[[],[],[],[3,9,10,11,14,17],[],[18],[]],
+"standard":
+	[[],[],[],[8],[],[],[19]],
+"standards":
+	[[],[14],[],[],[],[19],[]],
+"start":
+	[[],[4,5],[],[12],[],[],[15]],
+"stop":
+	[[8],[],[2,20],[14,15],[],[5,17],[]],
+"stories":
+	[[5],[],[],[],[],[17],[]],
+"strategic":
+	[[],[],[],[1,10],[],[],[]],
+"strategy":
+	[[],[],[],[18],[],[],[1]],
+"structures":
+	[[],[],[13],[16],[],[],[]],
+"students":
+	[[],[],[1],[9,17],[],[],[]],
+"stuff":
+	[[15],[],[],[],[20],[],[]],
+"subject":
+	[[],[],[20],[],[],[],[19]],
+"successful":
+	[[15],[6],[],[],[],[],[]],
+"support":
+	[[15],[],[4],[],[18],[15],[1,13]],
+"supported":
+	[[15],[19],[],[],[],[],[]],
+"supporting":
+	[[],[5],[],[],[],[14],[]],
+"sustainability":
+	[[5],[],[],[19],[],[],[]],
+"sustainable":
+	[[],[3],[],[],[],[15],[]],
+"system":
+	[[],[13],[],[4],[],[],[1]],
+"systems":
+	[[9,15],[],[15],[],[9],[1],[]],
+"taking":
+	[[],[],[2,4],[],[],[],[]],
+"teaching":
+	[[20],[],[],[19],[],[],[]],
+"technology":
+	[[7,14,19],[],[],[],[],[],[]],
+"terms":
+	[[],[],[12],[],[],[19],[]],
+"time":
+	[[16],[],[],[],[],[],[15]],
+"towards":
+	[[],[5],[],[16],[],[],[]],
+"traditional":
+	[[2],[],[],[19],[],[],[]],
+"training":
+	[[],[],[],[],[],[19],[]],
+"trying":
+	[[],[15],[],[],[19],[1],[]],
+"types":
+	[[7],[7],[],[4],[],[],[]],
+"understand":
+	[[7,17],[],[15],[12,17],[9,12,14],[3,12],[]],
+"understanding":
+	[[5],[],[],[9,14,19],[18],[],[9]],
+"understood":
+	[[],[],[],[13],[17],[11,17],[]],
+"using":
+	[[],[15,19],[20],[],[18],[],[]],
+"valuable":
+	[[],[],[],[],[5,14],[],[]],
+"value":
+	[[4,14,17],[14,16],[],[4,5,12,13,15,17],[11],[4],[]],
+"views":
+	[[],[],[],[10],[17],[15],[]],
+"web":
+	[[],[],[14],[],[12],[],[]],
+"whilst":
+	[[],[],[],[9],[19],[],[]],
+"wide":
+	[[],[14],[],[],[],[15],[]],
+"wikipedia":
+	[[],[],[],[],[],[],[13,20]],
+"world":
+	[[],[],[19],[],[],[],[11]],
+"wouldnt":
+	[[],[],[],[1],[],[],[]],
+"wrong":
+	[[],[],[16],[],[],[],[]]		};
+		
+	/* the data for the termclouds is an array of DataTable objects,
+		array index is the question number (including the pseudo-question for "all questions"
+		the DataTable is for direct use with the termcloud */
+	tcArray = new Array(8);
+	
+	var dt = new google.visualization.DataTable();
+	dt.addColumn('string', 'Label');
+        dt.addColumn('number', 'Value');
+        dt.addRows([
+                	['actually',2],
+        	['adoption',4],
+        	['benefits',3],
+        	['business',8],
+        	['commercial',6],
+        	['common',2],
+        	['content',2],
+        	['copyright',2],
+        	['creators',2],
+        	['current',4],
+        	['currently',3],
+        	['data',7],
+        	['develop',2],
+        	['dont',2],
+        	['economy',2],
+        	['education',2],
+        	['favourable',2],
+        	['free',2],
+        	['future',2],
+        	['government',5],
+        	['havent',2],
+        	['ipr',2],
+        	['issues',2],
+        	['lack',2],
+        	['mixed',2],
+        	['models',9],
+        	['particular',2],
+        	['people',2],
+        	['policies',2],
+        	['policy',2],
+        	['rights',2],
+        	['risks',2],
+        	['sector',2],
+        	['systems',2],
+        	['technology',3],
+        	['understand',2],
+        	['value',3]
+        	]);
+		tcArray[0] = dt;
+		dt = null;
+
+	var dt = new google.visualization.DataTable();
+	dt.addColumn('string', 'Label');
+        dt.addColumn('number', 'Value');
+        dt.addRows([
+                	['access',2],
+        	['accreditation',2],
+        	['allowing',2],
+        	['allows',2],
+        	['available',2],
+        	['based',2],
+        	['bring',2],
+        	['business',5],
+        	['businesses',2],
+        	['challenges',2],
+        	['content',8],
+        	['data',15],
+        	['economy',2],
+        	['education',5],
+        	['effective',4],
+        	['enable',2],
+        	['etc',2],
+        	['faster',2],
+        	['framework',3],
+        	['funding',2],
+        	['grand',2],
+        	['hadnt',2],
+        	['info',2],
+        	['innovation',2],
+        	['ipr',3],
+        	['licensingipr',2],
+        	['mining',2],
+        	['models',4],
+        	['people',4],
+        	['products',2],
+        	['public',4],
+        	['publishing',2],
+        	['research',4],
+        	['resources',4],
+        	['restrictions',2],
+        	['reuse',3],
+        	['services',3],
+        	['sharing',4],
+        	['sources',3],
+        	['start',2],
+        	['using',2],
+        	['value',2]
+        	]);
+		tcArray[1] = dt;
+		dt = null;
+
+	var dt = new google.visualization.DataTable();
+	dt.addColumn('string', 'Label');
+        dt.addColumn('number', 'Value');
+        dt.addRows([
+                	['available',2],
+        	['business',3],
+        	['clamp',2],
+        	['closed',2],
+        	['commercial',4],
+        	['completely',2],
+        	['consequences',2],
+        	['content',3],
+        	['data',9],
+        	['difficult',2],
+        	['digital',2],
+        	['environment',2],
+        	['exploitation',2],
+        	['income',2],
+        	['information',2],
+        	['internet',5],
+        	['legal',2],
+        	['major',2],
+        	['openness',2],
+        	['people',4],
+        	['personal',2],
+        	['public',3],
+        	['restricted',2],
+        	['restrictions',3],
+        	['rights',2],
+        	['stop',2],
+        	['taking',2],
+        	['wrong',2]
+        	]);
+		tcArray[2] = dt;
+		dt = null;
+
+	var dt = new google.visualization.DataTable();
+	dt.addColumn('string', 'Label');
+        dt.addColumn('number', 'Value');
+        dt.addRows([
+                	['advantages',2],
+        	['benefits',4],
+        	['business',10],
+        	['change',2],
+        	['collaborative',2],
+        	['content',4],
+        	['copyright',2],
+        	['culture',2],
+        	['data',11],
+        	['develop',2],
+        	['development',2],
+        	['digital',3],
+        	['education',3],
+        	['educational',3],
+        	['formal',2],
+        	['implications',2],
+        	['incentives',2],
+        	['industry',3],
+        	['informal',2],
+        	['institutional',3],
+        	['institutions',5],
+        	['intellectual',4],
+        	['knowledge',2],
+        	['leadership',2],
+        	['licenced',2],
+        	['literacy',2],
+        	['look',2],
+        	['model',4],
+        	['models',6],
+        	['move',3],
+        	['outputs',2],
+        	['people',3],
+        	['property',4],
+        	['publishing',2],
+        	['quality',2],
+        	['recognise',2],
+        	['required',3],
+        	['research',3],
+        	['responsible',2],
+        	['skills',2],
+        	['staff',6],
+        	['stop',2],
+        	['strategic',2],
+        	['students',2],
+        	['system',2],
+        	['understand',2],
+        	['understanding',4],
+        	['value',6],
+        	['wouldnt',2]
+        	]);
+		tcArray[3] = dt;
+		dt = null;
+
+	var dt = new google.visualization.DataTable();
+	dt.addColumn('string', 'Label');
+        dt.addColumn('number', 'Value');
+        dt.addRows([
+                	['anticipated',2],
+        	['commercial',2],
+        	['commons',2],
+        	['content',4],
+        	['creative',2],
+        	['danger',2],
+        	['data',2],
+        	['global',2],
+        	['lack',3],
+        	['lead',2],
+        	['legal',2],
+        	['legislation',2],
+        	['lesson',3],
+        	['level',2],
+        	['national',2],
+        	['people',6],
+        	['polarisation',2],
+        	['policy',2],
+        	['understand',3],
+        	['valuable',2]
+        	]);
+		tcArray[4] = dt;
+		dt = null;
+
+	var dt = new google.visualization.DataTable();
+	dt.addColumn('string', 'Label');
+        dt.addColumn('number', 'Value');
+        dt.addRows([
+                	['benefits',4],
+        	['business',5],
+        	['change',2],
+        	['commercial',2],
+        	['continue',3],
+        	['data',6],
+        	['demonstrate',3],
+        	['discussion',2],
+        	['economic',3],
+        	['etc',2],
+        	['government',2],
+        	['governments',2],
+        	['identify',2],
+        	['institutions',4],
+        	['involved',2],
+        	['jisc',8],
+        	['legislation',3],
+        	['level',2],
+        	['lobby',4],
+        	['management',3],
+        	['material',2],
+        	['models',5],
+        	['perspective',2],
+        	['policies',2],
+        	['policy',2],
+        	['potential',3],
+        	['practice',2],
+        	['range',2],
+        	['senior',2],
+        	['simple',2],
+        	['stop',2],
+        	['training',2],
+        	['understand',2],
+        	['understood',2],
+        	['value',2]
+        	]);
+		tcArray[5] = dt;
+		dt = null;
+
+	var dt = new google.visualization.DataTable();
+	dt.addColumn('string', 'Label');
+        dt.addColumn('number', 'Value');
+        dt.addRows([
+                	['activities',2],
+        	['data',5],
+        	['global',2],
+        	['government',2],
+        	['information',2],
+        	['model',2],
+        	['models',2],
+        	['people',2],
+        	['policy',2],
+        	['public',2],
+        	['publishers',2],
+        	['support',2],
+        	['wikipedia',2]
+        	]);
+		tcArray[6] = dt;
+		dt = null;
+
+	var dt = new google.visualization.DataTable();
+	dt.addColumn('string', 'Label');
+        dt.addColumn('number', 'Value');
+        dt.addRows([
+                	['agendas',2],
+        	['current',7],
+        	['dont',3],
+        	['little',2],
+        	['past',2],
+        	['abused',2],
+        	['adoption',5],
+        	['common',4],
+        	['entrenchment',2],
+        	['people',21],
+        	['range',3],
+        	['real',2],
+        	['traditional',2],
+        	['business',32],
+        	['data',55],
+        	['exploiting',3],
+        	['models',27],
+        	['changes',5],
+        	['commercial',16],
+        	['context',4],
+        	['currently',4],
+        	['education',13],
+        	['free',4],
+        	['future',3],
+        	['government',10],
+        	['mean',2],
+        	['placed',2],
+        	['sector',5],
+        	['value',14],
+        	['consequences',3],
+        	['issues',4],
+        	['lack',5],
+        	['risks',3],
+        	['stories',2],
+        	['sustainability',2],
+        	['understanding',7],
+        	['content',22],
+        	['creators',2],
+        	['easy',2],
+        	['enable',4],
+        	['sectors',2],
+        	['technology',3],
+        	['types',3],
+        	['understand',10],
+        	['develop',5],
+        	['favourable',2],
+        	['particular',3],
+        	['policies',5],
+        	['stop',7],
+        	['income',3],
+        	['leads',3],
+        	['loss',2],
+        	['mindset',2],
+        	['systems',5],
+        	['advent',2],
+        	['associated',2],
+        	['industries',2],
+        	['internet',6],
+        	['legislation',6],
+        	['openness',3],
+        	['access',4],
+        	['protecting',2],
+        	['rewarded',2],
+        	['sharing',6],
+        	['benefits',13],
+        	['copyright',8],
+        	['digital',7],
+        	['attribution',2],
+        	['build',4],
+        	['machine',3],
+        	['model',10],
+        	['promote',3],
+        	['readable',3],
+        	['broken',2],
+        	['change',8],
+        	['closed',3],
+        	['economy',4],
+        	['getting',3],
+        	['havent',2],
+        	['innovation',4],
+        	['ipr',6],
+        	['law',2],
+        	['legal',5],
+        	['mixed',2],
+        	['policy',9],
+        	['significant',2],
+        	['stuff',2],
+        	['successful',2],
+        	['support',6],
+        	['supported',2],
+        	['backlash',2],
+        	['time',2],
+        	['actually',3],
+        	['difficult',4],
+        	['organisations',3],
+        	['clamp',4],
+        	['driven',2],
+        	['economic',6],
+        	['economics',3],
+        	['etc',6],
+        	['framework',4],
+        	['rights',7],
+        	['accessible',5],
+        	['educational',6],
+        	['flourish',2],
+        	['litigation',2],
+        	['resources',6],
+        	['rise',2],
+        	['teaching',2],
+        	['apply',3],
+        	['patents',2],
+        	['probably',2],
+        	['publishing',4],
+        	['research',10],
+        	['reuse',5],
+        	['sustainable',2],
+        	['global',6],
+        	['managed',2],
+        	['paid',2],
+        	['potential',5],
+        	['services',5],
+        	['start',4],
+        	['businesses',4],
+        	['coming',2],
+        	['consistent',3],
+        	['players',2],
+        	['supporting',2],
+        	['towards',2],
+        	['accreditation',2],
+        	['establishment',2],
+        	['bring',3],
+        	['grand',2],
+        	['based',5],
+        	['opportunities',3],
+        	['sources',4],
+        	['culture',3],
+        	['effective',6],
+        	['able',3],
+        	['available',4],
+        	['hadnt',2],
+        	['allows',3],
+        	['creativity',2],
+        	['reasonable',2],
+        	['system',4],
+        	['public',10],
+        	['releasing',2],
+        	['standards',2],
+        	['wide',2],
+        	['approaches',3],
+        	['challenges',3],
+        	['cost',2],
+        	['development',3],
+        	['faster',2],
+        	['jisc',9],
+        	['major',4],
+        	['products',2],
+        	['projects',2],
+        	['trying',3],
+        	['using',4],
+        	['create',2],
+        	['creative',6],
+        	['info',3],
+        	['kinds',2],
+        	['mining',2],
+        	['allowing',4],
+        	['enabled',2],
+        	['restricted',3],
+        	['sets',3],
+        	['collaborative',4],
+        	['drive',3],
+        	['efficient',2],
+        	['funding',2],
+        	['knowledge',4],
+        	['licensingipr',2],
+        	['restrictions',5],
+        	['applied',2],
+        	['funded',3],
+        	['society',2],
+        	['students',3],
+        	['advantage',2],
+        	['offers',2],
+        	['taking',2],
+        	['concept',2],
+        	['environment',3],
+        	['similar',2],
+        	['deeper',2],
+        	['exploitation',2],
+        	['information',4],
+        	['rightsholders',3],
+        	['personal',2],
+        	['institutions',11],
+        	['provide',2],
+        	['terms',2],
+        	['completely',3],
+        	['extremes',2],
+        	['structures',2],
+        	['web',2],
+        	['appropriate',2],
+        	['balance',3],
+        	['regimes',2],
+        	['material',4],
+        	['scale',2],
+        	['wrong',2],
+        	['aware',2],
+        	['exploit',3],
+        	['sensitive',2],
+        	['feel',2],
+        	['look',3],
+        	['movements',2],
+        	['prevents',2],
+        	['silos',2],
+        	['world',2],
+        	['subject',2],
+        	['organisation',2],
+        	['strategic',2],
+        	['wouldnt',2],
+        	['advantages',2],
+        	['intellectual',4],
+        	['property',5],
+        	['awareness',3],
+        	['expose',2],
+        	['staff',7],
+        	['formal',2],
+        	['informal',2],
+        	['outputs',2],
+        	['recognise',2],
+        	['move',4],
+        	['required',3],
+        	['standard',2],
+        	['literacy',2],
+        	['whilst',2],
+        	['implications',3],
+        	['leadership',2],
+        	['skills',2],
+        	['views',3],
+        	['responsible',2],
+        	['institutional',4],
+        	['level',5],
+        	['licenced',3],
+        	['understood',4],
+        	['clarity',3],
+        	['discussion',3],
+        	['openly',2],
+        	['quality',2],
+        	['reward',2],
+        	['industry',3],
+        	['service',2],
+        	['help',2],
+        	['idea',2],
+        	['protected',2],
+        	['strategy',2],
+        	['incentives',2],
+        	['mission',2],
+        	['continue',4],
+        	['distribution',2],
+        	['practice',3],
+        	['lead',2],
+        	['polarisation',2],
+        	['valuable',2],
+        	['anticipated',2],
+        	['embedded',2],
+        	['example',2],
+        	['lesson',3],
+        	['bodies',2],
+        	['national',3],
+        	['commons',3],
+        	['internationally',2],
+        	['review',2],
+        	['pragmatic',2],
+        	['effectively',2],
+        	['orphan',2],
+        	['danger',2],
+        	['dangers',2],
+        	['resistance',2],
+        	['robust',2],
+        	['perspective',2],
+        	['implement',2],
+        	['involved',2],
+        	['demonstrate',3],
+        	['lobby',4],
+        	['management',3],
+        	['governments',2],
+        	['simple',2],
+        	['share',2],
+        	['fund',2],
+        	['peoples',2],
+        	['publishers',3],
+        	['makers',2],
+        	['identify',2],
+        	['senior',2],
+        	['professional',2],
+        	['training',2],
+        	['activities',2],
+        	['wikipedia',2]
+        	]);
+		tcArray[7] = dt;
+		dt = null;
+
+	
+	/* The data for the radar plots is an array of DataTable objects
+		arrat index is the question number (incl the pseudo-question)
+		the DataTable is for direct use with the imagechart 
+		NB extra scores[q,1] ensures that the plot "joins-up" to make a loop */
+	radarArray = new Array(8);
+
+	var dt = new google.visualization.DataTable();
+        dt.addColumn('number');
+        dt.addRows([
+        	[1],
+        	[0.8782619],
+        	[0.7870617],
+        	[0.0396002],
+        	[0.1306053],
+        	[0.1763023],
+        	[0.7304632],
+        	[0.1450148],
+        	[1]
+        	]);
+	radarArray[0] = dt;
+	dt = null;
+
+	var dt = new google.visualization.DataTable();
+        dt.addColumn('number');
+        dt.addRows([
+        	[0.9519169],
+        	[1],
+        	[0.6696568],
+        	[0.09711538],
+        	[0.05338266],
+        	[0.0864726],
+        	[0.2985642],
+        	[0.08890845],
+        	[0.9519169]
+        	]);
+	radarArray[1] = dt;
+	dt = null;
+
+	var dt = new google.visualization.DataTable();
+        dt.addColumn('number');
+        dt.addRows([
+        	[1],
+        	[0.7662387],
+        	[0.8138326],
+        	[0.2149725],
+        	[0.4726669],
+        	[0.7018509],
+        	[0.7553089],
+        	[0.3280097],
+        	[1]
+        	]);
+	radarArray[2] = dt;
+	dt = null;
+
+	var dt = new google.visualization.DataTable();
+        dt.addColumn('number');
+        dt.addRows([
+        	[0.8054185],
+        	[1],
+        	[0.7920333],
+        	[0.1346667],
+        	[0.2683369],
+        	[0.7494292],
+        	[0.9463063],
+        	[0.154108],
+        	[0.8054185]
+        	]);
+	radarArray[3] = dt;
+	dt = null;
+
+	var dt = new google.visualization.DataTable();
+        dt.addColumn('number');
+        dt.addRows([
+        	[0.8253267],
+        	[0.8402686],
+        	[0.7136576],
+        	[0.1034965],
+        	[0.2844513],
+        	[0.5529265],
+        	[1],
+        	[0.1421255],
+        	[0.8253267]
+        	]);
+	radarArray[4] = dt;
+	dt = null;
+
+	var dt = new google.visualization.DataTable();
+        dt.addColumn('number');
+        dt.addRows([
+        	[0.6864362],
+        	[1],
+        	[0.9776273],
+        	[0.1530303],
+        	[0.136692],
+        	[0.3065847],
+        	[0.537674],
+        	[0.2801963],
+        	[0.6864362]
+        	]);
+	radarArray[5] = dt;
+	dt = null;
+
+	var dt = new google.visualization.DataTable();
+        dt.addColumn('number');
+        dt.addRows([
+        	[0.9357827],
+        	[1],
+        	[0.9847894],
+        	[0.1942308],
+        	[0.080074],
+        	[0.0864726],
+        	[0],
+        	[0.3556338],
+        	[0.9357827]
+        	]);
+	radarArray[6] = dt;
+	dt = null;
+
+	var dt = new google.visualization.DataTable();
+        dt.addColumn('number');
+        dt.addRows([
+        	[0.9294796],
+        	[1],
+        	[0.8689115],
+        	[0.1325073],
+        	[0.2124412],
+        	[0.4260603],
+        	[0.7112816],
+        	[0.2089219],
+        	[0.9294796]
+        	]);
+	radarArray[7] = dt;
+	dt = null;
+
+}
+</script>
+  
+<script language="javascript" type="text/javascript">
+	function loadPage(){
+		initOptions();
+		initData();
+		currentQ = pseudoQ;
+		document.getElementById('selQ').options[currentQ].selected=true;
+		draw();
+	}
+	// handler for a change of question in focus
+	function qChangeHandler(qIndex){
+		currentQ = qIndex;
+		document.getElementById('qdiv').innerHTML="";
+		draw();
+	}
+</script>
+</head>
+
+<body>
+<h1>Seven Questions Term Clouds and Sentiment Analysis: JISC Innov 2012</h1>
+<div>
+Choose a question: <select id="selQ" onclick="qChangeHandler(this.options[this.selectedIndex].value);">
+<option value="0">Questions for the Oracle about 2025</option>
+<option value="1">A Favourable Outcome by 2025</option>
+<option value="2">An Unfavourable Outcome</option>
+<option value="3">How Will Culture and Institutions Need to Change</option>
+<option value="4">Lessons from the Past</option>
+<option value="5">Decisions to be Made and Actions Taken</option>
+<option value="6">If You Had a  Magic Wand    </option>
+<option value="7">All Questions</option>
+</select>
+</div>
+<div id="tcdiv" class="nice"></div>
+<div id="rdiv" class="nice"></div>
+<div id="qdiv" class="reduced">Click on a term to find how it was used.</div>
+
+<script type="text/javascript">
+	//google.load("visualization", "1");
+	google.load("visualization", "1", {packages:["imagechart"]});
+      	google.setOnLoadCallback(loadPage);
+      	var tc;
+      	var radar;
+      	function draw() {
+      		//term cloud
+        	tc = new TermCloud(document.getElementById('tcdiv'));
+        	tc.draw(tcArray[currentQ], tcOptions);//options can be {target: '_self'} etc
+        	google.visualization.events.addListener(tc, 'select', handleTermSelect);
+        	//radar plot
+        	radar = new google.visualization.ImageChart(document.getElementById('rdiv'));
+        	radar.draw(radarArray[currentQ], radarOptions);
+        	
+        	//if this is inside a google gadget then resize
+        	if(gadgets){
+			gadgets.window.adjustHeight();
+		}
+      	}
+	function handleTermSelect() {
+		var selection = tc.getSelection();
+  		if (selection.length > 0) {
+			selTerm=(tcArray[currentQ].getValue(selection[0].row,0));
+			//if the pseudo-question ("all") then aggregate, otherwise show responses for the current question
+			var ragArray = termUses[selTerm];
+			if(currentQ == pseudoQ){
+				resps='Responses (to any question) containing <b>'+selTerm+':</b><br/><br/>';
+				for (var q = 0; q<ragArray.length; q++) {
+					respIndexes=ragArray[q];
+					//an array of indexes
+					for(var r=0;r<respIndexes.length;r++){
+						resps+='"'+responses[respIndexes[r]-1][q]+'"<br/><br/>';
+					}
+				}
+			}else{
+				resps='Responses containing <b>'+selTerm+':</b><br/><br/>';
+				var respIndexes=ragArray[currentQ];
+				//an array of indexes
+				for(var r=0;r<respIndexes.length;r++){
+					resps+='"'+responses[respIndexes[r]-1][currentQ]+'"<br/><br/>';
+				}
+			}
+			resps = resps.replace('\n','<br/>');
+			document.getElementById('qdiv').innerHTML = resps;
+			//if this is inside a google gadget then resize
+        		if(gadgets){
+				gadgets.window.adjustHeight();
+			}
+		}
+	}
+
+    </script>
+
+</body>
+</html>
+
